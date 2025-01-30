@@ -1,3 +1,23 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%; /* for background  */
+    --foreground: 20 14.3% 4.1%; /* for Text Colors  */
+    --card: 31, 51%, 92%;
+    --primary: 24.6 95% 53.1%;
+    --secondary: 40, 10%, 90%;
+    --border: 20, 8%, 72%;
+  }
+
+  .dark {
+    --background: 240, 10%, 4%;
+    --foreground: 60 9.1% 97.8%;
+    --card: 20 14.3% 4.1%;
+    --primary: 20.5 90.2% 48.2%;
+    --secondary: 12 6.5% 15.1%;
+    --border: 12 6.5% 15.1%;
+  }
+}
