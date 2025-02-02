@@ -3,11 +3,11 @@
 
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
+import { BiMoon, BiSun } from 'react-icons/bi';
 
 export function ThemeSwitcher() {
   const [mounted, setMounted] = useState(false);
-  const { setTheme } = useTheme();
-
+  const { theme, setTheme } = useTheme();
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -15,9 +15,18 @@ export function ThemeSwitcher() {
   if (!mounted) return null;
 
   return (
-    <div>
-      <button onClick={() => setTheme('light')}>Light Mode</button>
-      <button onClick={() => setTheme('dark')}>Dark Mode</button>
-    </div>
+    <button
+      onClick={() => {
+        setTheme(theme === 'dark' ? 'light' : 'dark');
+      }}
+      className='p-2 rounded-lg hover:bg-foreground/10 transition-colors'
+      aria-label={`Toggle ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
+    >
+      {theme === 'dark' ? (
+        <BiSun className='w-6 h-6 text-foreground' />
+      ) : (
+        <BiMoon className='w-6 h-6 text-foreground' />
+      )}
+    </button>
   );
 }
