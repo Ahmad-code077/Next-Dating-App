@@ -33,7 +33,7 @@ const TopNav = () => {
       shouldHideOnScroll
       isMenuOpen={isMenuOpen}
       onMenuOpenChange={setIsMenuOpen}
-      className='bg-card dark:bg-card'
+      className='bg-card dark:bg-card  '
       classNames={{
         item: [
           'flex px-2',
@@ -42,7 +42,7 @@ const TopNav = () => {
       }}
     >
       {/* Mobile Menu Toggle */}
-      <NavbarContent className='md:hidden '>
+      <NavbarContent className='md:hidden  '>
         <NavbarMenuToggle
           aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
           className='text-foreground'
