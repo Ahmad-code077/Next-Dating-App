@@ -1,27 +1,49 @@
 'use client';
+import { registerUser } from '@/app/actions/authActions';
 import { registerFrom, registerSchema } from '@/lib/schema/RegisterSchema';
 import { Button, Card, CardBody, CardHeader, Input } from '@heroui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { FaHeart } from 'react-icons/fa';
+import { ZodIssue } from 'zod';
 const RegisterForm = () => {
   const {
     register,
+    setError,
     handleSubmit,
     formState: { isValid, errors },
   } = useForm<registerFrom>({
     resolver: zodResolver(registerSchema),
     mode: 'onTouched',
   });
-
-  const RegisterFormSubmit = (data: registerFrom) => {
-    console.log(data);
+  const RegisterFormSubmit = async (data: registerFrom) => {
+    const result = await registerUser(data);
+    if (result.status === 'success') {
+      console.log('User registered successfully', result.data);
+    } else {
+      if (Array.isArray(result.error)) {
+        result.error.forEach((e: ZodIssue) => {
+          console.log('e::: ', e);
+          const fieldName = e.path.join('.') as 'email' | 'name' | 'password';
+          setError(fieldName, {
+            message: e.message,
+          });
+        });
+      } else {
+        setError('root.serverError', {
+          message: result.error,
+        });
+      }
+    }
   };
   return (
     <Card className='py-4 md:w-2/5 mx-auto my-12 bg-card'>
       <CardHeader className='px-4 flex-col items-center gap-3'>
-        <div className='flex items-center justify-center gap-4 text-2xl sm:text-3xl'>
+        <div
+          className='flex 
+        items-center justify-center gap-4 text-2xl sm:text-3xl'
+        >
           <FaHeart className='text-primary' /> Register
         </div>
         <p className='text-center'>
