@@ -1,13 +1,17 @@
 'use server';
 
+import { signIn, signOut } from '@/auth';
 import { prisma } from '@/lib/prisma';
-import { registerFrom, registerSchema } from '@/lib/schema/RegisterSchema';
+import { loginFormType } from '@/lib/schema/LoginSchema';
+import { registerFromType, registerSchema } from '@/lib/schema/RegisterSchema';
 import { ActionResult } from '@/types';
+import { User } from '@prisma/client';
 import bcrypt from 'bcryptjs';
-import { User } from 'next-auth';
+import { AuthError } from 'next-auth';
 
+// SignUp function function
 export async function registerUser(
-  data: registerFrom
+  data: registerFromType
 ): Promise<ActionResult<User>> {
   try {
     const validated = registerSchema.safeParse(data);
@@ -16,16 +20,12 @@ export async function registerUser(
     }
     const { name, email, password } = validated.data;
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-
     const checkIfExsist = await prisma.user.findUnique({ where: { email } });
-    console.log(
-      'from check list just to check the error and hold them',
-      checkIfExsist
-    );
+
     if (checkIfExsist) {
       return { status: 'error', error: 'User Already Exsist' };
     }
+    const hashedPassword = await bcrypt.hash(password, 10);
     const user = await prisma.user.create({
       data: {
         name,
@@ -45,36 +45,35 @@ export async function registerUser(
     };
   }
 }
+// Login function
 
-// export async function getUserByEmail(
-//   email: string
-// ): Promise<
-//   ActionResult<{ id: string; name: string | null; email: string | null }>
-// > {
-//   try {
-//     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-//       return { status: 'error', error: 'Invalid email format' };
-//     }
+export async function signInUser(
+  data: loginFormType
+): Promise<ActionResult<string>> {
+  try {
+    await signIn('credentials', {
+      email: data.email,
+      password: data.password,
+      redirect: false,
+    });
+    return { status: 'success', data: 'Logged in' };
+  } catch (error) {
+    if (error instanceof AuthError) {
+      switch (error.type) {
+        case 'CredentialsSignin':
+          return { status: 'error', error: 'Invalid credentials' };
+        default:
+          return { status: 'error', error: 'Something went wrong' };
+      }
+    } else {
+      return { status: 'error', error: 'Something else went wrong' };
+    }
+  }
+}
 
-//     const user = await prisma.user.findUnique({
-//       where: { email },
-//       // select: {
-//       //   id: true,
-//       //   name: true,
-//       //   email: true,
-//       // },
-//     });
-
-//     if (!user) {
-//       return { status: 'error', error: 'User not found' };
-//     }
-
-//     return { status: 'success', data: user };
-//   } catch (error) {
-//     console.error('Get User Error:', error);
-//     return {
-//       status: 'error',
-//       error: error instanceof Error ? error.message : 'Database error',
-//     };
-//   }
-// }
+export async function getUserByEmail(email: string) {
+  return prisma.user.findUnique({ where: { email } });
+}
+export async function signOutUser() {
+  await signOut({ redirectTo: '/' });
+}

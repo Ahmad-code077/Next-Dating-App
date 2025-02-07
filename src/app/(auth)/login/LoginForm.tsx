@@ -1,25 +1,34 @@
 'use client';
-import { loginFormData, loginSchema } from '@/lib/schema/LoginSchema';
+import { signInUser } from '@/app/actions/authActions';
+import { loginFormType, loginSchema } from '@/lib/schema/LoginSchema';
 import { Button, Card, CardBody, CardHeader, Input } from '@heroui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { FaLock } from 'react-icons/fa';
+import { toast } from 'react-toastify';
 
 const LoginForm = () => {
   const {
     register,
     handleSubmit,
 
-    formState: { isValid, errors },
-  } = useForm<loginFormData>({
+    formState: { isValid, errors, isSubmitting },
+  } = useForm<loginFormType>({
     resolver: zodResolver(loginSchema),
     mode: 'onTouched',
   });
-
-  // Correctly type the data parameter with the LoginFormData type
-  const onSubmit = (data: loginFormData): void => {
-    console.log(data);
+  const router = useRouter();
+  const onSubmit = async (data: loginFormType) => {
+    const result = await signInUser(data);
+    if (result.status === 'success') {
+      toast.success('User Login successfully');
+      router.push('/members');
+      router.refresh();
+    } else {
+      toast.error(result.error as string);
+    }
   };
 
   return (
@@ -66,7 +75,7 @@ const LoginForm = () => {
             color={!isValid ? 'default' : 'primary'}
             disabled={!isValid}
           >
-            Login
+            {isSubmitting ? 'Loading...' : 'Login'}
           </Button>
         </form>
       </CardBody>

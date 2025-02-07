@@ -9,4 +9,4 @@ export const registerSchema = z.object({
   password: z.string().min(6, 'Password must be at least 6 characters'),
 });
 
-export type registerFrom = z.infer<typeof registerSchema>;
+export type registerFromType = z.infer<typeof registerSchema>;

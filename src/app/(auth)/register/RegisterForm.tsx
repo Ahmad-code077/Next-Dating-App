@@ -1,26 +1,30 @@
 'use client';
 import { registerUser } from '@/app/actions/authActions';
-import { registerFrom, registerSchema } from '@/lib/schema/RegisterSchema';
+import { registerFromType, registerSchema } from '@/lib/schema/RegisterSchema';
 import { Button, Card, CardBody, CardHeader, Input } from '@heroui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { FaHeart } from 'react-icons/fa';
+import { toast } from 'react-toastify';
 import { ZodIssue } from 'zod';
 const RegisterForm = () => {
   const {
     register,
     setError,
     handleSubmit,
-    formState: { isValid, errors },
-  } = useForm<registerFrom>({
+    reset,
+
+    formState: { isValid, errors, isSubmitting },
+  } = useForm<registerFromType>({
     resolver: zodResolver(registerSchema),
     mode: 'onTouched',
   });
-  const RegisterFormSubmit = async (data: registerFrom) => {
+  const RegisterFormSubmit = async (data: registerFromType) => {
     const result = await registerUser(data);
     if (result.status === 'success') {
-      console.log('User registered successfully', result.data);
+      toast.success('User Register successfully');
+      reset();
     } else {
       if (Array.isArray(result.error)) {
         result.error.forEach((e: ZodIssue) => {
@@ -34,9 +38,11 @@ const RegisterForm = () => {
         setError('root.serverError', {
           message: result.error,
         });
+        toast.error(result.error);
       }
     }
   };
+
   return (
     <Card className='py-4 md:w-2/5 mx-auto my-12 bg-card'>
       <CardHeader className='px-4 flex-col items-center gap-3'>
@@ -92,12 +98,14 @@ const RegisterForm = () => {
           </p>
           <Button
             type='submit'
-            className={`py-6  ${!isValid && 'cursor-not-allowed'}  text-lg`}
+            className={`py-6 text-lg ${
+              !isValid || isSubmitting ? 'cursor-not-allowed' : ''
+            }`}
             variant='solid'
             color={!isValid ? 'default' : 'primary'}
-            disabled={!isValid}
+            disabled={!isValid || isSubmitting}
           >
-            Sign Up
+            {isSubmitting ? 'Loading...' : 'Sign Up'}
           </Button>
         </form>
       </CardBody>
