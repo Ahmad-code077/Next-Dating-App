@@ -22,7 +22,7 @@ type Props = {
 };
 
 export default function TopNavClient({ session }: Props) {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
   const navItems = [
     { label: 'Members', href: '/members' },
@@ -34,6 +34,7 @@ export default function TopNavClient({ session }: Props) {
     { label: 'Login', href: '/login', variant: 'light' },
     { label: 'Sign Up', href: '/register', variant: 'primary' },
   ];
+  const menuItems = session?.user ? navItems : [...navItems, ...authItems];
 
   return (
     <Navbar
@@ -43,10 +44,7 @@ export default function TopNavClient({ session }: Props) {
     >
       {/* Mobile Menu Toggle */}
       <NavbarContent className='md:hidden'>
-        <NavbarMenuToggle
-          aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
-          className='text-foreground'
-        />
+        <NavbarMenuToggle className='text-foreground' />
       </NavbarContent>
 
       {/* Brand Logo */}
@@ -59,7 +57,7 @@ export default function TopNavClient({ session }: Props) {
       {/* Desktop Navigation */}
       <NavbarContent
         style={{ justifyContent: 'space-between' }}
-        className='hidden md:flex  md:items-center justify-between '
+        className='hidden md:flex  md:items-center  '
       >
         {navItems.map((item) => (
           <NavLinks key={item.href} href={item.href} label={item.label} />
@@ -72,7 +70,7 @@ export default function TopNavClient({ session }: Props) {
           <UserMenu user={session.user} />
         ) : (
           authItems.map((item) => (
-            <NavbarItem key={item.href}>
+            <NavbarItem key={item.href} className='hidden md:flex'>
               <Button
                 as={Link}
                 href={item.href}
@@ -95,29 +93,17 @@ export default function TopNavClient({ session }: Props) {
 
       {/* Mobile Menu */}
       <NavbarMenu className='bg-card'>
-        {session?.user
-          ? [...navItems].map((item) => (
-              <NavbarMenuItem key={item.href} className='my-2'>
-                <Link
-                  className='w-full text-foreground'
-                  href={item.href}
-                  onClick={() => setIsMenuOpen(false)} // Close menu on click
-                >
-                  {item.label}
-                </Link>
-              </NavbarMenuItem>
-            ))
-          : [...navItems, ...authItems].map((item) => (
-              <NavbarMenuItem key={item.href} className='my-2'>
-                <Link
-                  className='w-full text-foreground'
-                  href={item.href}
-                  onClick={() => setIsMenuOpen(false)} // Close menu on click
-                >
-                  {item.label}
-                </Link>
-              </NavbarMenuItem>
-            ))}
+        {menuItems.map((item) => (
+          <NavbarMenuItem key={item.href} className='my-2'>
+            <Link
+              className='w-full text-foreground'
+              href={item.href}
+              onClick={() => setIsMenuOpen(false)}
+            >
+              {item.label}
+            </Link>
+          </NavbarMenuItem>
+        ))}
       </NavbarMenu>
     </Navbar>
   );

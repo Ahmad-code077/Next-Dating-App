@@ -38,7 +38,7 @@ export default function UserMenu({ user }: Props) {
             className='h-14 flex flex-row'
             aria-label='username'
           >
-            Signed in as {user?.name}
+            Hi 👋🏽 {user?.name}
           </DropdownItem>
         </DropdownSection>
         <DropdownItem key={'2'} as={Link} href='/members/edit'>
@@ -46,7 +46,7 @@ export default function UserMenu({ user }: Props) {
         </DropdownItem>
         <DropdownItem
           key={'3'}
-          color='danger'
+          color='warning'
           onClick={async () => signOutUser()}
         >
           Log out

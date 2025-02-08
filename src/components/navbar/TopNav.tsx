@@ -1,9 +1,8 @@
 import React from 'react';
 import { auth } from '@/auth';
-import TopNavClient from './TopNavClient'; // ✅ Import Client Component
-
+import TopNavClient from './TopNavClient';
 export default async function TopNav() {
-  const session = await auth(); // ✅ Fetch session in server component
+  const session = await auth();
 
   return <TopNavClient session={session} />;
 }
