@@ -47,7 +47,7 @@ export default function UserMenu({ user }: Props) {
         <DropdownItem
           key={'3'}
           color='warning'
-          onClick={async () => signOutUser()}
+          onPress={async () => signOutUser()}
         >
           Log out
         </DropdownItem>
