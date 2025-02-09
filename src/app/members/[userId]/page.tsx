@@ -13,7 +13,7 @@ export default async function MemberDetailedPage({
   if (!member) return notFound();
   return (
     <>
-      <CardHeader className='text-2xl font-semibold text-default'>
+      <CardHeader className='text-2xl font-semibold text-default '>
         Profile
       </CardHeader>
       <Divider />

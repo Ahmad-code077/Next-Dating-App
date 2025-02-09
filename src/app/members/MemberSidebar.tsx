@@ -28,7 +28,7 @@ export default function MemberSidebar({ member }: Props) {
     { name: 'Chat', href: `${basePath}/chat` },
   ];
   return (
-    <Card className='w-full mt-10 items-center h-screen'>
+    <Card className='w-full md:mt-10 items-center h-screen'>
       <Image
         height={200}
         width={200}
@@ -52,11 +52,11 @@ export default function MemberSidebar({ member }: Props) {
               href={link.href}
               key={link.name}
               className={`block rounded 
-                                ${
-                                  pathname === link.href
-                                    ? 'text-default'
-                                    : 'hover:text-default/50'
-                                }`}
+              ${
+                pathname === link.href
+                  ? 'text-primary'
+                  : 'hover:text-primary/80'
+              }`}
             >
               {link.name}
             </Link>

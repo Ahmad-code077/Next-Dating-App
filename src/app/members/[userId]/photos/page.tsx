@@ -18,7 +18,7 @@ export default async function PhotosPage({
       </CardHeader>
       <Divider />
       <CardBody>
-        <div className='grid grid-cols-5 gap-3'>
+        <div className='grid grid-cols-2  md:grid-cols-4 gap-3'>
           {photos?.map((photo) => (
             <div key={photo.id}>
               <Image

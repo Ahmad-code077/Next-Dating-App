@@ -41,6 +41,7 @@ export default function TopNavClient({ session }: Props) {
       shouldHideOnScroll
       isMenuOpen={isMenuOpen}
       onMenuOpenChange={setIsMenuOpen}
+      className='z-30'
     >
       {/* Mobile Menu Toggle */}
       <NavbarContent className='md:hidden'>

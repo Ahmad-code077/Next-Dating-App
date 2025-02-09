@@ -51,26 +51,32 @@ export async function signInUser(
   data: loginFormType
 ): Promise<ActionResult<string>> {
   try {
-    await signIn('credentials', {
+    const user = await getUserByEmail(data.email);
+    if (!user) {
+      return { status: 'error', error: 'User not found' };
+    }
+
+    // If user exists, attempt sign in
+    const result = await signIn('credentials', {
       email: data.email,
       password: data.password,
       redirect: false,
     });
+
+    // Handle potential redirect errors
+    if (result?.error) {
+      return { status: 'error', error: 'Invalid credentials' };
+    }
+
     return { status: 'success', data: 'Logged in' };
   } catch (error) {
+    console.error('Login Error:', error);
     if (error instanceof AuthError) {
-      switch (error.type) {
-        case 'CredentialsSignin':
-          return { status: 'error', error: 'Invalid credentials' };
-        default:
-          return { status: 'error', error: 'Something went wrong' };
-      }
-    } else {
-      return { status: 'error', error: 'Something else went wrong' };
+      return { status: 'error', error: 'Authentication failed' };
     }
+    return { status: 'error', error: 'Something went wrong' };
   }
 }
-
 export async function getUserByEmail(email: string) {
   return prisma.user.findUnique({ where: { email } });
 }

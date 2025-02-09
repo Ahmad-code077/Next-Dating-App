@@ -27,7 +27,7 @@ const MemberCard = ({ member }: Props) => {
             src={member.image as string}
           />
         </CardBody>
-        <CardFooter className='text-small justify-between py-6'>
+        <CardFooter className='text-small justify-between py-6 bg-card'>
           <b>
             {member.name} , {calculateYear(member?.dateOfBirth)}
           </b>

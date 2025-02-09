@@ -6,7 +6,7 @@
   :root {
     --background: 0 0% 100%; /* for background  */
     --foreground: 20 14.3% 4.1%; /* for Text Colors  */
-    --card: 31, 51%, 92%;
+    --card: 0 0% 98%;
     --primary: 24.6 95% 53.1%;
     --secondary: 40, 10%, 90%;
     --border: 20, 8%, 72%;
@@ -19,5 +19,27 @@
     --primary: 20.5 90.2% 48.2%;
     --secondary: 12 6.5% 15.1%;
     --border: 12 6.5% 15.1%;
+  }
+}
+/* Smooth transitions for sidebar */
+.transform {
+  transition-property: transform;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 300ms;
+}
+
+/* Ensure proper z-indexing */
+.fixed {
+  z-index: 40;
+}
+
+/* Mobile menu button styling */
+.md-hide {
+  display: block;
+}
+
+@media (min-width: 768px) {
+  .md-hide {
+    display: none;
   }
 }
