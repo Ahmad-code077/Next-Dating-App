@@ -1,5 +1,4 @@
 'use client';
-
 import { signOutUser } from '@/app/actions/authActions';
 import {
   Avatar,
