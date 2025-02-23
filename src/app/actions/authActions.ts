@@ -19,7 +19,6 @@ export async function registerUser(
       return { status: 'error', error: validated.error.errors };
     }
     const { name, email, password } = validated.data;
-    console.log(validated.data);
 
     const checkIfExsist = await prisma.user.findUnique({ where: { email } });
 
