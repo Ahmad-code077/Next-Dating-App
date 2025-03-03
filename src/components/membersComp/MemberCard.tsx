@@ -32,7 +32,8 @@ const MemberCard = ({ member, likeIds }: Props) => {
             className='w-full object-cover'
             width={300}
             height={200}
-            src={member.image as string}
+            src={(member.image as string) || '/images/user.png'}
+            unoptimized
           />
           <div onClick={preventLinkAction}>
             <div className='absolute top-3 right-3 z-50'>

@@ -22,9 +22,10 @@ export default async function PhotosPage({
           {photos?.map((photo) => (
             <div key={photo.id}>
               <Image
-                src={photo.url}
+                src={(photo.url as string) || '/images/user.png'}
                 alt='Image of member'
                 className='object-cover aspect-square'
+                sizes='24px'
               />
             </div>
           ))}
