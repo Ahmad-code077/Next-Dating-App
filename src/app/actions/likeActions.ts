@@ -7,6 +7,12 @@ export async function toggleLikeMember(targetUserId: string, isLiked: boolean) {
   // the target id is passed on click to the like button when the specific user card button click then the targetUserId is provided
   try {
     const userId = await getAuthUserId();
+
+    console.log('user id', userId);
+    if (!userId) {
+      throw new Error('User is not authenticated');
+    }
+    console.log('isLiked truesfjsddsfjkalkejr', isLiked);
     if (isLiked) {
       await prisma.like.delete({
         where: {
@@ -25,8 +31,11 @@ export async function toggleLikeMember(targetUserId: string, isLiked: boolean) {
       });
     }
   } catch (error) {
-    console.log(error);
-    throw error;
+    if (error instanceof Error) {
+      console.log('Error message:', error.message);
+    } else {
+      console.log('Unknown error:', error);
+    }
   }
 }
 export async function fetchCurrentUserLikeIds() {
@@ -66,7 +75,7 @@ export async function fetchLikedMembers(type = 'source') {
 }
 async function fetchSourceLikes(userId: string) {
   const sourceList = await prisma.like.findMany({
-    where: { sourceUserId: userId }, // whom i target or like
+    where: { sourceUserId: userId },
     select: { targetMember: true },
   });
   return sourceList.map((x) => x.targetMember);

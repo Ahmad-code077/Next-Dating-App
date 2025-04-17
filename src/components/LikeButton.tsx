@@ -10,6 +10,7 @@ type Props = {
 export default function LikeButton({ targetId, hasLiked }: Props) {
   const router = useRouter();
   async function toggleLike() {
+    console.log('toggle like trigger', targetId, hasLiked);
     await toggleLikeMember(targetId, hasLiked);
     router.refresh();
   }

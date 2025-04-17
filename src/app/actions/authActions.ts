@@ -86,6 +86,7 @@ export async function signOutUser() {
 
 export async function getAuthUserId() {
   const session = await auth();
+  console.log('session', session);
   const userId = session?.user?.id;
   if (!userId) throw new Error('Unauthorized');
   return userId;
