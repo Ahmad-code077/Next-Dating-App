@@ -13,7 +13,6 @@ const LoginForm = () => {
   const {
     register,
     handleSubmit,
-
     formState: { isValid, errors, isSubmitting },
   } = useForm<loginFormType>({
     resolver: zodResolver(loginSchema),

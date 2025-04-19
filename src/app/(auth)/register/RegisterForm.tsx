@@ -4,6 +4,7 @@ import { registerFromType, registerSchema } from '@/lib/schema/RegisterSchema';
 import { Button, Card, CardBody, CardHeader, Input } from '@heroui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { FaHeart } from 'react-icons/fa';
 import { toast } from 'react-toastify';
@@ -14,17 +15,18 @@ const RegisterForm = () => {
     setError,
     handleSubmit,
     reset,
-
     formState: { isValid, errors, isSubmitting },
   } = useForm<registerFromType>({
     resolver: zodResolver(registerSchema),
     mode: 'onTouched',
   });
+  const router = useRouter();
   const RegisterFormSubmit = async (data: registerFromType) => {
     const result = await registerUser(data);
     if (result.status === 'success') {
-      toast.success('User Register successfully');
+      toast.success('User Register successfully Login to Proceed');
       reset();
+      router.push('/login');
     } else {
       if (Array.isArray(result.error)) {
         result.error.forEach((e: ZodIssue) => {

@@ -56,14 +56,12 @@ export async function signInUser(
       return { status: 'error', error: 'User not found' };
     }
 
-    // If user exists, attempt sign in
     const result = await signIn('credentials', {
       email: data.email,
       password: data.password,
       redirect: false,
     });
 
-    // Handle potential redirect errors
     if (result?.error) {
       return { status: 'error', error: 'Invalid credentials' };
     }
@@ -86,7 +84,6 @@ export async function signOutUser() {
 
 export async function getAuthUserId() {
   const session = await auth();
-  console.log('session', session);
   const userId = session?.user?.id;
   if (!userId) throw new Error('Unauthorized');
   return userId;
