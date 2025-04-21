@@ -41,12 +41,12 @@ export default function ResponsiveMemberLayout({
       {/* Mobile Toggle Button */}
       <button
         onClick={toggleSidebar}
-        className='md:hidden fixed right-6 top-20 z-20 p-2  rounded-lg shadow-lg bg-white'
+        className='md:hidden fixed right-6 top-24 z-20 p-2  rounded-lg shadow-lg bg-white'
       >
         {isOpen ? (
-          <GoSidebarExpand size={'30'} className='text-black' />
+          <GoSidebarExpand size={'20'} className='text-black' />
         ) : (
-          <GoSidebarCollapse size={'30'} className='text-black' />
+          <GoSidebarCollapse size={'20'} className='text-black' />
         )}
       </button>
 
@@ -56,7 +56,7 @@ export default function ResponsiveMemberLayout({
           isOpen ? 'translate-x-0' : ''
         }`}
       >
-        <MemberSidebar member={member} />
+        <MemberSidebar member={member} toggleSidebar={toggleSidebar} />
       </div>
 
       {/* Main Content */}

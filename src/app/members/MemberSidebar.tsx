@@ -1,5 +1,7 @@
 'use client';
 import { calculateYear } from '@/lib/utils';
+import { IoCloseCircleOutline } from 'react-icons/io5';
+
 import {
   Button,
   Card,
@@ -15,8 +17,9 @@ import { usePathname } from 'next/navigation';
 import React from 'react';
 type Props = {
   member: Member;
+  toggleSidebar: () => void;
 };
-export default function MemberSidebar({ member }: Props) {
+export default function MemberSidebar({ member, toggleSidebar }: Props) {
   const pathname = usePathname();
   const basePath = `/members/${member.userId}`;
   const navLinks = [
@@ -28,13 +31,18 @@ export default function MemberSidebar({ member }: Props) {
     { name: 'Chat', href: `${basePath}/chat` },
   ];
   return (
-    <Card className='w-full md:mt-10 items-center h-screen'>
+    <Card className='w-full  md:mt-10 items-center h-[100dvh] md:h-full'>
+      <div className='w-full flex items-center justify-end px-4 py-2'>
+        <button onClick={toggleSidebar} className='flex md:hidden'>
+          <IoCloseCircleOutline size={40} />
+        </button>
+      </div>
       <Image
-        height={200}
-        width={200}
+        height={120}
+        width={120}
         src={member.image || '/images/user.png'}
         alt='User profile main image'
-        className='rounded-full mt-6 aspect-square object-cover'
+        className='rounded-full md:mt-6 aspect-square object-cover'
       />
       <CardBody>
         <div className='flex flex-col items-center'>
@@ -51,6 +59,7 @@ export default function MemberSidebar({ member }: Props) {
             <Link
               href={link.href}
               key={link.name}
+              onClick={toggleSidebar}
               className={`block rounded 
               ${
                 pathname === link.href
