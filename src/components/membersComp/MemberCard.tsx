@@ -36,7 +36,7 @@ const MemberCard = ({ member, likeIds }: Props) => {
             unoptimized
           />
           <div onClick={preventLinkAction}>
-            <div className='absolute top-3 right-3 z-50'>
+            <div className='absolute top-3 right-3 z-10'>
               <LikeButton targetId={member.userId} hasLiked={hasLiked} />
             </div>
           </div>

@@ -9,9 +9,11 @@ import { GoSidebarCollapse, GoSidebarExpand } from 'react-icons/go';
 export default function ResponsiveMemberLayout({
   member,
   children,
+  navLinks,
 }: {
   member: Member;
   children: React.ReactNode;
+  navLinks: { name: string; href: string }[];
 }) {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -56,7 +58,11 @@ export default function ResponsiveMemberLayout({
           isOpen ? 'translate-x-0' : ''
         }`}
       >
-        <MemberSidebar member={member} toggleSidebar={toggleSidebar} />
+        <MemberSidebar
+          member={member}
+          toggleSidebar={toggleSidebar}
+          navLinks={navLinks}
+        />
       </div>
 
       {/* Main Content */}

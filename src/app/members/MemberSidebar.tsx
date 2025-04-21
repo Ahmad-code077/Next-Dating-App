@@ -18,18 +18,15 @@ import React from 'react';
 type Props = {
   member: Member;
   toggleSidebar: () => void;
+  navLinks: { name: string; href: string }[];
 };
-export default function MemberSidebar({ member, toggleSidebar }: Props) {
+export default function MemberSidebar({
+  member,
+  toggleSidebar,
+  navLinks,
+}: Props) {
   const pathname = usePathname();
-  const basePath = `/members/${member.userId}`;
-  const navLinks = [
-    { name: 'Profile', href: `${basePath}` },
-    {
-      name: 'Photos',
-      href: `${basePath}/photos`,
-    },
-    { name: 'Chat', href: `${basePath}/chat` },
-  ];
+
   return (
     <Card className='w-full  md:mt-10 items-center h-[100dvh] md:h-full'>
       <div className='w-full flex items-center justify-end px-4 py-2'>
