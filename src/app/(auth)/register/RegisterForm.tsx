@@ -1,6 +1,7 @@
 'use client';
 import { registerUser } from '@/app/actions/authActions';
 import { registerFromType, registerSchema } from '@/lib/schema/RegisterSchema';
+import { handleFormServerErrors } from '@/lib/utils';
 import { Button, Card, CardBody, CardHeader, Input } from '@heroui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
@@ -8,7 +9,6 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { FaHeart } from 'react-icons/fa';
 import { toast } from 'react-toastify';
-import { ZodIssue } from 'zod';
 const RegisterForm = () => {
   const {
     register,
@@ -28,20 +28,10 @@ const RegisterForm = () => {
       reset();
       router.push('/login');
     } else {
-      if (Array.isArray(result.error)) {
-        result.error.forEach((e: ZodIssue) => {
-          console.log('e::: ', e);
-          const fieldName = e.path.join('.') as 'email' | 'name' | 'password';
-          setError(fieldName, {
-            message: e.message,
-          });
-        });
-      } else {
-        setError('root.serverError', {
-          message: result.error,
-        });
-        toast.error(result.error);
-      }
+      handleFormServerErrors(result, setError);
+      toast.error(
+        typeof result.error === 'string' ? result.error : 'Something went wrong'
+      );
     }
   };
 
