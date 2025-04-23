@@ -1,5 +1,6 @@
 import { getMemberPhotosByUserId } from '@/app/actions/memberActions';
-import { CardHeader, Divider, CardBody, Image } from '@heroui/react';
+import CardInnerWrapper from '@/components/CardInnerWrapper';
+import Image from 'next/image';
 import React from 'react';
 
 export default async function PhotosPage({
@@ -12,25 +13,28 @@ export default async function PhotosPage({
   const photos = await getMemberPhotosByUserId(userId);
 
   return (
-    <>
-      <CardHeader className='text-2xl font-semibold text-default'>
-        Photos
-      </CardHeader>
-      <Divider />
-      <CardBody>
-        <div className='grid grid-cols-2  md:grid-cols-4 gap-3'>
-          {photos?.map((photo) => (
-            <div key={photo.id}>
-              <Image
-                src={(photo.url as string) || '/images/user.png'}
-                alt='Image of member'
-                className='object-cover aspect-square'
-                sizes='24px'
-              />
-            </div>
-          ))}
-        </div>
-      </CardBody>
-    </>
+    <CardInnerWrapper
+      header='Photos'
+      body={
+        <>
+          {' '}
+          <div className='grid grid-cols-2  md:grid-cols-4 gap-3'>
+            {photos?.map((photo) => (
+              <div key={photo.id}>
+                <Image
+                  src={(photo.url as string) || '/images/user.png'}
+                  alt='Image of member'
+                  width={200}
+                  height={200}
+                  quality={90}
+                  className='object-cover aspect-square rounded-md  '
+                  sizes='(min-width: 768px) 200px, 100vw'
+                />
+              </div>
+            ))}
+          </div>
+        </>
+      }
+    />
   );
 }

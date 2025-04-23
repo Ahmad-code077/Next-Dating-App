@@ -1,13 +1,5 @@
-import { CardHeader, Divider, CardBody } from '@heroui/react';
+import CardInnerWrapper from '@/components/CardInnerWrapper';
 import React from 'react';
 export default function ChatPage() {
-  return (
-    <>
-      <CardHeader className='text-2xl font-semibold text-default'>
-        Chat
-      </CardHeader>
-      <Divider />
-      <CardBody>Chat goes here</CardBody>
-    </>
-  );
+  return <CardInnerWrapper header='Chat' body='chat goes here' />;
 }

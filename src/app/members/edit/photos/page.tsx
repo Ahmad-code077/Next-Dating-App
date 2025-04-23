@@ -4,9 +4,9 @@ import {
   getMemberPhotosByUserId,
 } from '@/app/actions/memberActions';
 import MemberPhotos from '@/components/membersComp/MemberPhoto';
-import { CardBody, CardHeader, Divider } from '@heroui/react';
 import React from 'react';
 import MemberPhotoUpload from './MemberPhotoUpload';
+import CardInnerWrapper from '@/components/CardInnerWrapper';
 
 export default async function PhotosPage() {
   const userId = await getAuthUserId();
@@ -15,18 +15,19 @@ export default async function PhotosPage() {
 
   return (
     <>
-      <CardHeader className='flex flex-row justify-between items-center'>
-        <div className='text-2xl font-semibold text-default'>Edit Profile</div>
-      </CardHeader>
-      <Divider />
-      <CardBody>
-        <MemberPhotoUpload />
-        <MemberPhotos
-          photos={photos}
-          editing={true}
-          mainImageUrl={member?.image}
-        />
-      </CardBody>
+      <CardInnerWrapper
+        header='Edit Photos'
+        body={
+          <>
+            <MemberPhotoUpload />
+            <MemberPhotos
+              photos={photos}
+              editing={true}
+              mainImageUrl={member?.image}
+            />
+          </>
+        }
+      />
     </>
   );
 }
