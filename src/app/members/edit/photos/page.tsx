@@ -6,6 +6,7 @@ import {
 import MemberPhotos from '@/components/membersComp/MemberPhoto';
 import { CardBody, CardHeader, Divider } from '@heroui/react';
 import React from 'react';
+import MemberPhotoUpload from './MemberPhotoUpload';
 
 export default async function PhotosPage() {
   const userId = await getAuthUserId();
@@ -19,7 +20,7 @@ export default async function PhotosPage() {
       </CardHeader>
       <Divider />
       <CardBody>
-        {/* <MemberPhotoUpload /> */}
+        <MemberPhotoUpload />
         <MemberPhotos
           photos={photos}
           editing={true}
