@@ -88,3 +88,11 @@ export async function getAuthUserId() {
   if (!userId) throw new Error('Unauthorized');
   return userId;
 }
+export async function getUserInfoForNav() {
+  const userId = await getAuthUserId();
+
+  return prisma.user.findUnique({
+    where: { id: userId },
+    select: { image: true, name: true },
+  });
+}

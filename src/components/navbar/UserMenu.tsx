@@ -8,11 +8,13 @@ import {
   DropdownSection,
   DropdownTrigger,
 } from '@heroui/react';
-import { Session } from 'next-auth';
 import Link from 'next/link';
 import React from 'react';
 type Props = {
-  user: Session['user'];
+  user: {
+    name: string;
+    image: string;
+  };
 };
 export default function UserMenu({ user }: Props) {
   return (

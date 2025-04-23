@@ -7,7 +7,8 @@ import {
 import { ActionResult } from '@/types';
 import { getAuthUserId } from './authActions';
 import { prisma } from '@/lib/prisma';
-import { Member } from '@prisma/client';
+import { Member, Photo } from '@prisma/client';
+import { cloudinary } from '@/lib/cloudinary';
 
 export async function UpdateMemberProfile(
   data: MemberEditFormSchema,
@@ -41,5 +42,70 @@ export async function UpdateMemberProfile(
   } catch (error) {
     console.log(error);
     return { status: 'error', error: 'something went wrong' };
+  }
+}
+
+export async function AddPhoto(url: string, publicId: string) {
+  try {
+    const userId = await getAuthUserId();
+    return prisma.member.update({
+      where: {
+        userId,
+      },
+      data: {
+        photos: {
+          create: [{ url, publicId }],
+        },
+      },
+    });
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+export async function setMainImage(photo: Photo) {
+  console.log('phto recieved  📷📷📷📷📷', photo);
+  const userId = await getAuthUserId();
+  try {
+    await prisma.user.update({
+      where: { id: userId },
+      data: {
+        image: photo.url,
+      },
+    });
+    return prisma.member.update({
+      where: { userId },
+      data: { image: photo.url },
+    });
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+export async function deleteImage(photo: Photo) {
+  try {
+    const userId = await getAuthUserId();
+
+    if (photo.publicId) {
+      const result = await cloudinary.v2.uploader.destroy(photo.publicId);
+      console.log('Cloudinary delete result:', result);
+
+      if (result.result !== 'ok') {
+        throw new Error('Failed to delete image from Cloudinary');
+      }
+    }
+    return await prisma.member.update({
+      where: { userId },
+      data: {
+        photos: {
+          delete: { id: photo.id },
+        },
+      },
+    });
+  } catch (error) {
+    console.log(error);
+    throw error;
   }
 }

@@ -7,6 +7,8 @@ import React, { useState } from 'react';
 import MemberImage from './MemberImage';
 import StarButton from './StarButton';
 import DeleteButton from './DeleteButton';
+import { deleteImage, setMainImage } from '@/app/actions/userAction';
+import { toast } from 'react-toastify';
 
 type Props = {
   photos: Photo[] | null;
@@ -24,12 +26,13 @@ export default function MemberPhotos({ photos, editing, mainImageUrl }: Props) {
 
   const onSetMain = async (photo: Photo) => {
     if (photo.url === mainImageUrl) return null;
+    console.log('set to main photo');
     setLoading({
       isLoading: true,
       id: photo.id,
       type: 'main',
     });
-    // await setMainImage(photo);
+    await setMainImage(photo);
     router.refresh();
     setLoading({
       isLoading: false,
@@ -39,13 +42,19 @@ export default function MemberPhotos({ photos, editing, mainImageUrl }: Props) {
   };
 
   const onDelete = async (photo: Photo) => {
-    if (photo.url === mainImageUrl) return null;
+    if (photo.url === mainImageUrl) {
+      toast.error(
+        `You can't delete your main profile photo. Set another one as main first.`
+      );
+      return null;
+    }
+    console.log('user sadi to delete this photo', photo);
     setLoading({
       isLoading: true,
       id: photo.id,
       type: 'delete',
     });
-    // await deleteImage(photo);
+    await deleteImage(photo);
     router.refresh();
     setLoading({
       isLoading: false,

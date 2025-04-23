@@ -15,13 +15,12 @@ import Link from 'next/link';
 import { ThemeSwitcher } from '../themeSwitch/ThemeSwitcher';
 import NavLinks from './NavLinks';
 import UserMenu from './UserMenu';
-import { Session } from 'next-auth';
 
 type Props = {
-  session: Session | null;
+  userInfo: { image: string; name: string };
 };
 
-export default function TopNavClient({ session }: Props) {
+export default function TopNavClient({ userInfo }: Props) {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
   const navItems = [
@@ -34,7 +33,7 @@ export default function TopNavClient({ session }: Props) {
     { label: 'Login', href: '/login', variant: 'light' },
     { label: 'Sign Up', href: '/register', variant: 'primary' },
   ];
-  const menuItems = session?.user ? navItems : [...navItems, ...authItems];
+  const menuItems = !!userInfo ? navItems : [...navItems, ...authItems];
 
   return (
     <Navbar
@@ -67,8 +66,8 @@ export default function TopNavClient({ session }: Props) {
 
       {/* User Authentication */}
       <NavbarContent justify='end'>
-        {session?.user ? (
-          <UserMenu user={session.user} />
+        {!!userInfo ? (
+          <UserMenu user={userInfo as { image: string; name: string }} />
         ) : (
           authItems.map((item) => (
             <NavbarItem key={item.href} className='hidden md:flex'>
