@@ -1,5 +1,6 @@
 import { FieldValues, Path, UseFormSetError } from 'react-hook-form';
 import { ZodIssue } from 'zod';
+import { format } from 'date-fns';
 
 export function calculateYear(year: Date) {
   const birthDate = new Date(year);
@@ -21,4 +22,8 @@ export function handleFormServerErrors<TFieldValues extends FieldValues>(
   } else {
     setError('root.serverError', { message: errorResponse.error });
   }
+}
+
+export function formatShortDateTime(date: Date) {
+  return format(date, 'dd MMM yy h:mm:a');
 }

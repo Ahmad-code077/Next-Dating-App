@@ -1,6 +1,35 @@
 import CardInnerWrapper from '@/components/CardInnerWrapper';
 import React from 'react';
 import ChatForm from './ChatForm';
-export default function ChatPage() {
-  return <CardInnerWrapper header='Chat' body={<ChatForm />} />;
+import { getMessageThread } from '@/app/actions/messageActions';
+import MessageBox from './MessageBox';
+import { getAuthUserId } from '@/app/actions/authActions';
+export default async function ChatPage({
+  params,
+}: {
+  params: Promise<{ userId: string }>;
+}) {
+  const recipientUserId = (await params).userId;
+  const messages = await getMessageThread(recipientUserId);
+  console.log('messages get from the user ', messages);
+  const userId = await getAuthUserId();
+
+  const body = (
+    <div>
+      {messages.length === 0 ? (
+        'No messages to display'
+      ) : (
+        <div>
+          {messages.map((message) => (
+            <MessageBox
+              key={message.id}
+              message={message}
+              currentUserId={userId}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+  return <CardInnerWrapper header='Chat' body={body} footer={<ChatForm />} />;
 }

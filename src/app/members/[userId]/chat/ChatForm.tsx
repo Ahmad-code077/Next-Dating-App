@@ -1,16 +1,23 @@
 'use client';
 
+import { createMessage } from '@/app/actions/messageActions';
 import { messageSchema, MessageSchemaType } from '@/lib/schema/MessageSchema';
+import { handleFormServerErrors } from '@/lib/utils';
 import { Button, Input } from '@heroui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { HiPaperAirplane } from 'react-icons/hi2';
 
 const ChatForm = () => {
+  const router = useRouter();
+  const params = useParams<{ userId: string }>();
   const {
     formState: { errors, isSubmitting, isValid },
     register,
     reset,
+    setError,
     handleSubmit,
   } = useForm<MessageSchemaType>({
     defaultValues: {
@@ -22,11 +29,18 @@ const ChatForm = () => {
   });
 
   const onMessageSubmit = async (data: MessageSchemaType) => {
-    console.log('Message submitted:', data); // Handle message submission logic here
-    reset();
+    console.log('Message submitted:', data);
+
+    const result = await createMessage(data, params.userId);
+    if (result.status === 'error') {
+      handleFormServerErrors(result, setError);
+    } else {
+      reset();
+      router.refresh();
+    }
   };
   return (
-    <div>
+    <div className='w-full'>
       <form
         className='flex  items-center justify-center gap-2'
         onSubmit={handleSubmit(onMessageSubmit)}
