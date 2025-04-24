@@ -33,7 +33,7 @@ export default function MessageBox({ message, currentUserId }: Props) {
         )}
 
         <div
-          className={`flex flex-col max-w-[80%] sm:max-w-[60%] px-4 py-2 ${
+          className={`flex flex-col w-[80%] sm:w-[55%]  px-4 py-2 ${
             isCurrentUserSender
               ? 'rounded-l-xl rounded-tr-xl text-white bg-blue-100'
               : 'rounded-r-xl rounded-tl-xl bg-green-100'
@@ -41,17 +41,20 @@ export default function MessageBox({ message, currentUserId }: Props) {
         >
           <div className='flex justify-between items-center w-full'>
             {message.dateRead && message.recipientId !== currentUserId && (
-              <span className='text-xs text-black italic'>
+              <span className='text-xs text-black italic text-center'>
                 (Read x mins ago)
               </span>
             )}
-            <div className='flex justify-between w-full'>
-              <p className='text-sm font-semibold text-gray-900 text-start'>
-                {message.senderName}
-              </p>
-              <p className='text-sm text-gray-500 ml-2'>{message.created}</p>
-            </div>
+
+            <span className='text-sm font-semibold text-gray-900 text-center'>
+              {message.senderName}
+            </span>
+
+            <span className='text-sm text-gray-500 text-center'>
+              {message.created}
+            </span>
           </div>
+
           <p className='text-sm py-3 text-gray-900'>{message.text}</p>
         </div>
 
