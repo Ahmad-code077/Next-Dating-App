@@ -1,3 +1,4 @@
+'use client';
 import { CardHeader, Divider, CardBody, CardFooter } from '@heroui/react';
 import React, { ReactNode } from 'react';
 
