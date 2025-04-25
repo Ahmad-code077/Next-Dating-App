@@ -15,8 +15,8 @@ import {
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { Key, useCallback, useState } from 'react';
 import { AiFillDelete } from 'react-icons/ai';
-// import { deleteMessage } from '../actions/messageActions';
 import { truncateString } from '@/lib/utils';
+import { deleteMessage } from '../actions/messageActions';
 
 type Props = {
   messages: MessageDto[];
@@ -57,7 +57,7 @@ export default function MessageTable({ messages }: Props) {
         id: message.id,
         loading: true,
       });
-      // await deleteMessage(message.id, isOutbox);
+      await deleteMessage(message.id, isOutbox);
       router.refresh();
       setDeleting({ id: '', loading: false });
     },

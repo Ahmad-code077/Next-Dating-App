@@ -129,3 +129,45 @@ export async function getMessagesByContainer(container: string) {
     throw new Error('Failed to get messages by container');
   }
 }
+
+export async function deleteMessage(messageId: string, isOutbox: boolean) {
+  try {
+    const selector = isOutbox ? 'senderDeleted' : 'recipientDeleted';
+    const userId = await getAuthUserId();
+
+    await prisma.message.update({
+      where: { id: messageId },
+      data: {
+        [selector]: true,
+      },
+    });
+
+    const messagesToDelete = await prisma.message.findMany({
+      where: {
+        OR: [
+          {
+            senderId: userId,
+            senderDeleted: true,
+            recipientDeleted: true,
+          },
+          {
+            recipientId: userId,
+            senderDeleted: true,
+            recipientDeleted: true,
+          },
+        ],
+      },
+    });
+
+    if (messagesToDelete.length > 0) {
+      await prisma.message.deleteMany({
+        where: {
+          OR: messagesToDelete.map((m) => ({ id: m.id })),
+        },
+      });
+    }
+  } catch (error) {
+    console.log('error at deleting message', error);
+    throw new Error('Failed to delete message');
+  }
+}
