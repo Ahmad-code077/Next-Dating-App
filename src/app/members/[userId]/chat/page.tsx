@@ -11,7 +11,6 @@ export default async function ChatPage({
 }) {
   const recipientUserId = (await params).userId;
   const messages = await getMessageThread(recipientUserId);
-  console.log('messages get from the user ', messages);
   const userId = await getAuthUserId();
 
   const body = (

@@ -19,7 +19,7 @@ export default function CardInnerWrapper({ header, body, footer }: Props) {
         )}
       </CardHeader>
       <Divider />
-      <CardBody>{body}</CardBody>
+      <CardBody className='hide-scrollbar'>{body}</CardBody>
       {footer && <CardFooter>{footer}</CardFooter>}
     </>
   );
