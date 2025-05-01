@@ -50,6 +50,7 @@ export async function createMessage(
 export async function getMessageThread(recipientId: string) {
   try {
     const userId = await getAuthUserId();
+
     const messages = await prisma.message.findMany({
       where: {
         OR: [
@@ -70,7 +71,40 @@ export async function getMessageThread(recipientId: string) {
       },
       select: selectMessage,
     });
-    return messages.map((message) => mapMessageToMessageDto(message));
+
+    let readCount = 0;
+
+    const unreadMessageIds = messages
+      ?.filter(
+        (m) =>
+          m.dateRead === null &&
+          m.sender?.userId === recipientId &&
+          m.recipient?.userId === userId
+      )
+      ?.map((m) => m.id);
+
+    console.log('messages unread ides 😋😋😋😋😋', unreadMessageIds);
+    if (unreadMessageIds.length > 0) {
+      await prisma.message.updateMany({
+        where: {
+          id: { in: unreadMessageIds },
+        },
+        data: { dateRead: new Date() },
+      });
+
+      readCount = unreadMessageIds.length;
+
+      await pusherServer.trigger(
+        createChatId(recipientId, userId),
+        'messages:read',
+        unreadMessageIds
+      );
+    }
+
+    return {
+      messages: messages.map((m) => mapMessageToMessageDto(m)),
+      readCount,
+    };
   } catch (error) {
     console.log('error at getting message thread', error);
     throw new Error('Failed to get message thread');

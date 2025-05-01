@@ -1,5 +1,6 @@
 'use client';
 
+import { timeAgo } from '@/lib/utils';
 import { MessageDto } from '@/types';
 import { Avatar } from '@heroui/react';
 import React, { useRef, useEffect } from 'react';
@@ -42,7 +43,7 @@ export default function MessageBox({ message, currentUserId }: Props) {
           <div className='flex justify-between items-center w-full'>
             {message.dateRead && message.recipientId !== currentUserId && (
               <span className='text-xs text-black italic text-center'>
-                (Read x mins ago)
+                (Read {timeAgo(message.dateRead)})
               </span>
             )}
 
