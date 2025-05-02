@@ -15,6 +15,7 @@ import { Member } from '@prisma/client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React from 'react';
+import PresenceDot from '@/components/PresenceDot';
 type Props = {
   member: Member;
   toggleSidebar: () => void;
@@ -43,8 +44,13 @@ export default function MemberSidebar({
       />
       <CardBody>
         <div className='flex flex-col items-center'>
-          <div className='text-2xl'>
-            {member.name}, {calculateYear(member.dateOfBirth)}
+          <div className='flex items-center gap-1'>
+            <div className='text-xl'>
+              {member.name}, {calculateYear(member.dateOfBirth)}
+            </div>
+            <div className='relative'>
+              <PresenceDot member={member} />
+            </div>{' '}
           </div>
           <div className='text-sm text-neutral-500'>
             {member.city}, {member.country}

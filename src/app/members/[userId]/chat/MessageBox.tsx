@@ -1,8 +1,8 @@
 'use client';
 
+import PresenceAvatar from '@/components/PresenceAvatar';
 import { timeAgo } from '@/lib/utils';
 import { MessageDto } from '@/types';
-import { Avatar } from '@heroui/react';
 import React, { useRef, useEffect } from 'react';
 
 type Props = {
@@ -26,11 +26,12 @@ export default function MessageBox({ message, currentUserId }: Props) {
         }`}
       >
         {!isCurrentUserSender && (
-          <Avatar
-            name={message.senderName}
-            className='self-end'
-            src={message.senderImage || '/images/user.png'}
-          />
+          <div className='self-end'>
+            <PresenceAvatar
+              src={message.senderImage}
+              userId={message.senderId}
+            />
+          </div>
         )}
 
         <div
@@ -60,11 +61,12 @@ export default function MessageBox({ message, currentUserId }: Props) {
         </div>
 
         {isCurrentUserSender && (
-          <Avatar
-            name={message.senderName}
-            className='self-end'
-            src={message.senderImage || '/images/user.png'}
-          />
+          <div className='self-end'>
+            <PresenceAvatar
+              src={message.senderImage}
+              userId={message.senderId}
+            />
+          </div>
         )}
       </div>
 

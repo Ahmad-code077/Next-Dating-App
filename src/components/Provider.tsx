@@ -1,5 +1,6 @@
 'use client';
 
+import { usePresenceChannel } from '@/hooks/usePresenceChannel';
 import { HeroUIProvider } from '@heroui/react';
 import { ThemeProvider as NextThemesProvider } from 'next-themes';
 import { useEffect, useState, ReactNode } from 'react';
@@ -8,12 +9,12 @@ import { Bounce, ToastContainer } from 'react-toastify';
 const Provider = ({ children }: { children: ReactNode }) => {
   const [mounted, setMounted] = useState(false);
 
+  usePresenceChannel();
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  if (!mounted) return <>{children}</>; // Prevent mismatch during SSR
-
+  if (!mounted) return <>{children}</>;
   return (
     <HeroUIProvider>
       <NextThemesProvider attribute='class' defaultTheme='dark'>
