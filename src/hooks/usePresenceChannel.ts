@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef } from 'react';
 import usePresenceStore from './usePresenceStore';
 import { Channel, Members } from 'pusher-js';
 import { pusherClient } from '@/lib/pusher';
+type PresenceMember = { id: string };
 
 export const usePresenceChannel = () => {
   const set = usePresenceStore((state) => state.set);
@@ -44,14 +45,15 @@ export const usePresenceChannel = () => {
 
       channelRef.current.bind(
         'pusher:member_added',
-        (member: Record<string, any>) => {
+        (member: PresenceMember) => {
           handleAddMember(member.id);
         }
       );
 
       channelRef.current.bind(
         'pusher:member_removed',
-        (member: Record<string, any>) => {
+        (member: PresenceMember) => {
+          // comming form these
           handleRemoveMember(member.id);
         }
       );
