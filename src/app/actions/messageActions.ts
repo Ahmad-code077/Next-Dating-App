@@ -83,7 +83,6 @@ export async function getMessageThread(recipientId: string) {
       )
       ?.map((m) => m.id);
 
-    console.log('messages unread ides 😋😋😋😋😋', unreadMessageIds);
     if (unreadMessageIds.length > 0) {
       await prisma.message.updateMany({
         where: {

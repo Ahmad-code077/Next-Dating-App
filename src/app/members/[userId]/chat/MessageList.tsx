@@ -24,11 +24,6 @@ export default function MessageList({
   );
 
   const handleMessage = useCallback((message: MessageDto) => {
-    console.log(
-      'new message from the chat to check it 😎😎😎😎😎😎😎😎😎',
-      message,
-      initialMessages
-    );
     return setMessages((prevMessages) => [...prevMessages, message]);
   }, []);
 
