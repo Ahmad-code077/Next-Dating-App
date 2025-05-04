@@ -4,7 +4,6 @@ import { messageSchema, MessageSchemaType } from '@/lib/schema/MessageSchema';
 import { getAuthUserId } from './authActions';
 import { prisma } from '@/lib/prisma';
 import { ActionResult, MessageDto } from '@/types';
-// import { Message } from '@prisma/client';
 import { mapMessageToMessageDto } from '@/lib/mappings';
 import { pusherServer } from '@/lib/pusher';
 import { createChatId } from '@/lib/utils';
@@ -35,8 +34,18 @@ export async function createMessage(
       select: selectMessage,
     });
     const messageDto = mapMessageToMessageDto(message);
+    console.log(
+      'Triggering channel: 😎😎😎😎😎😎😎😎',
+      createChatId(userId, recipientUserId)
+    );
+
     await pusherServer.trigger(
       createChatId(userId, recipientUserId),
+      'message:new',
+      messageDto
+    );
+    pusherServer.trigger(
+      `private-${recipientUserId}`,
       'message:new',
       messageDto
     );
@@ -44,6 +53,23 @@ export async function createMessage(
   } catch (error) {
     console.log('error at creating message', error);
     throw new Error('Failed to create message');
+  }
+}
+
+export async function getUnreadMessageCount() {
+  try {
+    const userId = await getAuthUserId();
+
+    return prisma.message.count({
+      where: {
+        recipientId: userId,
+        dateRead: null,
+        recipientDeleted: false,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+    throw error;
   }
 }
 
@@ -122,7 +148,7 @@ export async function getMessagesByContainer(container: string) {
     const messages = await prisma.message.findMany({
       where: conditions,
       orderBy: {
-        created: 'asc',
+        created: 'desc',
       },
       select: selectMessage,
     });

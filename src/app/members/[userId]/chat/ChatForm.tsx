@@ -1,6 +1,7 @@
 'use client';
 
 import { createMessage } from '@/app/actions/messageActions';
+import useMessageStore from '@/hooks/useMessageStore';
 import { messageSchema, MessageSchemaType } from '@/lib/schema/MessageSchema';
 import { handleFormServerErrors } from '@/lib/utils';
 import { Button, Input } from '@heroui/react';
@@ -27,6 +28,7 @@ const ChatForm = () => {
     reValidateMode: 'onSubmit',
     resolver: zodResolver(messageSchema),
   });
+  const addMessage = useMessageStore((state) => state.add);
 
   const onMessageSubmit = async (data: MessageSchemaType) => {
     console.log('Message submitted:', data);
@@ -37,6 +39,8 @@ const ChatForm = () => {
     } else {
       reset();
       router.refresh();
+      console.log('Message created:', result.data);
+      addMessage(result.data);
     }
   };
   return (

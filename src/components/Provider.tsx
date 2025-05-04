@@ -1,15 +1,44 @@
 'use client';
 
+import { getUnreadMessageCount } from '@/app/actions/messageActions';
+import useMessageStore from '@/hooks/useMessageStore';
+import { useNotificationChannel } from '@/hooks/useNotificationChannel';
 import { usePresenceChannel } from '@/hooks/usePresenceChannel';
 import { HeroUIProvider } from '@heroui/react';
 import { ThemeProvider as NextThemesProvider } from 'next-themes';
-import { useEffect, useState, ReactNode } from 'react';
+import { useEffect, useState, ReactNode, useRef, useCallback } from 'react';
 import { Bounce, ToastContainer } from 'react-toastify';
 
-const Provider = ({ children }: { children: ReactNode }) => {
+const Provider = ({
+  children,
+  userId,
+}: {
+  children: ReactNode;
+  userId: string;
+}) => {
   const [mounted, setMounted] = useState(false);
 
+  const isUnreadCountSet = useRef(false);
+  const updateUnreadCount = useMessageStore((state) => state.updateUnreadCount);
+
+  const setUnreadCount = useCallback(
+    (amount: number) => {
+      updateUnreadCount(amount);
+    },
+    [updateUnreadCount]
+  );
+
+  useEffect(() => {
+    if (!isUnreadCountSet.current && userId) {
+      getUnreadMessageCount().then((count) => {
+        setUnreadCount(count);
+      });
+      isUnreadCountSet.current = true;
+    }
+  }, [setUnreadCount, userId]);
+
   usePresenceChannel();
+  useNotificationChannel(userId);
   useEffect(() => {
     setMounted(true);
   }, []);
