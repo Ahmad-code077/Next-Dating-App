@@ -2,7 +2,6 @@
 
 import { Pagination } from '@heroui/react';
 import React, { useEffect } from 'react';
-import clsx from 'clsx';
 import usePaginationStore from '@/hooks/usePaginationStore';
 
 export default function PaginationComponent({
@@ -42,10 +41,7 @@ export default function PaginationComponent({
             <div
               key={size}
               onClick={() => setPageSize(size)}
-              className={clsx('page-size-box', {
-                'bg-foreground text-white hover:bg-foreground hover:text-white':
-                  pageSize === size,
-              })}
+              className={'page-size-box'}
             >
               {size}
             </div>

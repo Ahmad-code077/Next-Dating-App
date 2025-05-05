@@ -51,3 +51,9 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+.page-size-box {
+  @apply cursor-pointer border-2  bg-transparent hover:bg-default-50
+        flex items-center justify-center rounded-lg 
+        shadow-sm min-w-[36px] w-9 h-9 text-sm;
+}

@@ -25,16 +25,20 @@ export default function Filters() {
   const { gender, ageRange, orderBy } = filters;
 
   return (
-    <div className='shadow-md py-2'>
-      <div className='flex flex-row justify-around items-center'>
-        <div className='flex gap-2 items-center'>
-          <div className='text-default font-semibold text-xl'>
+    <div className='shadow-md py-2 px-4'>
+      <div className='flex flex-col gap-4 md:flex-row md:justify-around md:items-center'>
+        {/* Results Counter */}
+        <div className='flex gap-2 items-center justify-center md:justify-start'>
+          <div className=' font-semibold text-xl'>
             Results:{' '}
-            {isPending ? <Spinner size='sm' color='default' /> : totalCount}
+            <span className='text-primary'>
+              {isPending ? <Spinner size='sm' color='default' /> : totalCount}
+            </span>{' '}
           </div>
         </div>
 
-        <div className='flex gap-2 items-center'>
+        {/* Gender Filter */}
+        <div className='flex gap-2 items-center justify-center md:justify-start'>
           <div>Gender:</div>
           {genderList.map(({ icon: Icon, value }) => (
             <Button
@@ -49,7 +53,9 @@ export default function Filters() {
             </Button>
           ))}
         </div>
-        <div className='flex flex-row items-center gap-2 w-1/4'>
+
+        {/* Age Range Slider */}
+        <div className='flex flex-row items-center gap-2 w-full md:w-1/4'>
           <Slider
             label='Age range'
             size='sm'
@@ -61,7 +67,9 @@ export default function Filters() {
             onChangeEnd={(value) => selectAge(value as number[])}
           />
         </div>
-        <div className='flex flex-col items-center'>
+
+        {/* Photo Switch */}
+        <div className='flex flex-row md:flex-col items-center justify-center gap-2 md:gap-0'>
           <p className='text-sm'>With photo</p>
           <Switch
             color='default'
@@ -70,7 +78,9 @@ export default function Filters() {
             onChange={(checked) => selectWithPhoto(checked)}
           />
         </div>
-        <div className='w-1/4'>
+
+        {/* Order By Select */}
+        <div className='w-full md:w-1/4'>
           <Select
             size='sm'
             fullWidth
