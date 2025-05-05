@@ -7,7 +7,6 @@ import useMessageStore from './useMessageStore';
 import { newLikeToast, newMessageToast } from '@/components/NotificationToast';
 
 export const useNotificationChannel = (userId: string | null) => {
-  console.log('user id  😋😋😋😋', userId);
   const channelRef = useRef<Channel | null>(null);
   const pathname = usePathname();
   const searchParams = useSearchParams();
