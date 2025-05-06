@@ -84,3 +84,17 @@ export async function getMemberPhotosByUserId(userId: string) {
   if (!member) return null;
   return member.photos.map((p) => p) as Photo[];
 }
+
+export async function updateLastActive() {
+  const userId = await getAuthUserId();
+
+  try {
+    return prisma.member.update({
+      where: { userId },
+      data: { updated: new Date() },
+    });
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
