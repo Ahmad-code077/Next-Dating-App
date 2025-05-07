@@ -8,22 +8,26 @@ type FilterState = {
     key: K,
     value: UserFilters[K]
   ) => void;
+  resetFilters: () => void;
+};
+
+const defaultFilters = {
+  ageRange: [18, 100],
+  gender: ['male', 'female'],
+  orderBy: 'updated',
+  withPhoto: true,
 };
 
 const useFilterStore = create<FilterState>()(
   devtools((set) => ({
-    filters: {
-      ageRange: [18, 100],
-      gender: ['male', 'female'],
-      orderBy: 'updated',
-      withPhoto: true,
-    },
+    filters: defaultFilters,
     setFilters: (filterName, value) =>
       set((state) => {
         return {
           filters: { ...state.filters, [filterName]: value },
         };
       }),
+    resetFilters: () => set({ filters: defaultFilters }),
   }))
 );
 

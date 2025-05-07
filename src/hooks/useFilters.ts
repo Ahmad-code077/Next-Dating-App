@@ -10,7 +10,7 @@ export const useFilters = () => {
   const pathname = usePathname();
   const router = useRouter();
 
-  const { filters, setFilters } = useFilterStore();
+  const { filters, setFilters, resetFilters } = useFilterStore();
 
   const pageNumber = usePaginationStore(
     (state) => state?.pagination?.pageNumber
@@ -101,5 +101,6 @@ export const useFilters = () => {
     filters,
     totalCount,
     isPending,
+    resetFilters,
   };
 };

@@ -22,7 +22,7 @@ export default function Filters() {
     isPending,
   } = useFilters();
 
-  const { gender, ageRange, orderBy } = filters;
+  const { gender, ageRange, orderBy, withPhoto } = filters;
 
   return (
     <div className='shadow-md py-2 px-4'>
@@ -62,6 +62,7 @@ export default function Filters() {
             minValue={18}
             maxValue={100}
             defaultValue={ageRange}
+            value={ageRange}
             aria-label='Age range slider'
             color='foreground'
             onChangeEnd={(value) => selectAge(value as number[])}
@@ -73,7 +74,7 @@ export default function Filters() {
           <p className='text-sm'>With photo</p>
           <Switch
             color='default'
-            defaultSelected
+            isSelected={withPhoto}
             size='sm'
             onChange={(checked) => selectWithPhoto(checked)}
           />
