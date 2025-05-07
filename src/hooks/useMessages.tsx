@@ -1,8 +1,11 @@
-import { deleteMessage } from '@/app/actions/messageActions';
+import {
+  deleteMessage,
+  getMessagesByContainer,
+} from '@/app/actions/messageActions';
 import { MessageDto } from '@/types';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
-import { useState, useCallback, Key, useEffect } from 'react';
+import { useState, useCallback, Key, useEffect, useRef } from 'react';
 import useMessageStore from './useMessageStore';
 
 const outboxColumns = [
@@ -19,15 +22,19 @@ const inboxColumns = [
   { key: 'actions', label: 'Actions' },
 ];
 
-export const useMessages = (initialMessages: MessageDto[]) => {
+export const useMessages = (
+  initialMessages: MessageDto[],
+  nextCursor?: string
+) => {
   const set = useMessageStore((state) => state.set);
   const remove = useMessageStore((state) => state.remove);
   const messages = useMessageStore((state) => state.messages);
   const updateUnreadCount = useMessageStore((state) => state.updateUnreadCount);
-
+  const resetMessages = useMessageStore((state) => state.resetMessages);
   const searchParams = useSearchParams();
   const router = useRouter();
-  const isOutbox = searchParams.get('container') === 'outbox';
+  const container = searchParams.get('container');
+  const isOutbox = container === 'outbox';
   const [isDeleting, setDeleting] = useState({
     id: '',
     loading: false,
@@ -37,7 +44,7 @@ export const useMessages = (initialMessages: MessageDto[]) => {
     set(initialMessages);
 
     return () => {
-      set([]);
+      resetMessages();
     };
   }, [initialMessages, set]);
 
@@ -65,6 +72,22 @@ export const useMessages = (initialMessages: MessageDto[]) => {
     router.push(url + '/chat');
   };
 
+  const cursorRef = useRef(nextCursor);
+
+  const [loadingMore, setLoadingMore] = useState(false);
+
+  const loadMore = useCallback(async () => {
+    if (cursorRef.current) {
+      setLoadingMore(true);
+      const { messages, nextCursor } = await getMessagesByContainer(
+        container as string,
+        cursorRef.current
+      );
+      set(messages);
+      cursorRef.current = nextCursor;
+      setLoadingMore(false);
+    }
+  }, [container, set]);
   return {
     isOutbox,
     columns,
@@ -72,5 +95,8 @@ export const useMessages = (initialMessages: MessageDto[]) => {
     selectRow: handleRowSelect,
     isDeleting,
     messages,
+    loadingMore,
+    loadMore,
+    hasMore: !!cursorRef.current,
   };
 };

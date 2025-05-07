@@ -136,7 +136,11 @@ export async function getMessageThread(recipientId: string) {
   }
 }
 
-export async function getMessagesByContainer(container: string) {
+export async function getMessagesByContainer(
+  container: string,
+  cursor?: string,
+  limit = 2
+) {
   try {
     const userId = await getAuthUserId();
     const conditions = {
@@ -146,13 +150,31 @@ export async function getMessagesByContainer(container: string) {
         : { recipientDeleted: false }),
     };
     const messages = await prisma.message.findMany({
-      where: conditions,
+      where: {
+        ...conditions,
+        ...(cursor ? { created: { lte: new Date(cursor) } } : {}),
+      },
       orderBy: {
         created: 'desc',
       },
+
       select: selectMessage,
+      take: limit + 1,
     });
-    return messages.map((message) => mapMessageToMessageDto(message));
+
+    let nextCursor: string | undefined;
+
+    if (messages.length > limit) {
+      const nextItem = messages.pop();
+      nextCursor = nextItem?.created.toISOString();
+    } else {
+      nextCursor = undefined;
+    }
+
+    const messagesToReturn = messages.map((message) =>
+      mapMessageToMessageDto(message)
+    );
+    return { messages: messagesToReturn, nextCursor };
   } catch (error) {
     console.log('error at getting messages by container', error);
     throw new Error('Failed to get messages by container');
