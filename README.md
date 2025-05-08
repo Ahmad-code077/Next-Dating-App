@@ -14,11 +14,15 @@ git clone https://github.com/Ahmad-code077/Next-Dating-App
 cd Next-Dating-App
 ```
 
- ### 2. Install dependencies
- 
+### 2. Install dependencies
+
 ```bash
-git clone https://github.com/Ahmad-code077/Next-Dating-App
-cd Next-Dating-App
+npm install
+# or
+yarn install
+# or
+pnpm install
+
 ```
 
 ### 3. Set up your environment variables
@@ -62,26 +66,23 @@ Open http://localhost:3000 in your browser to view the app.
 
 ## 🧠 Features
 
-- ✅ User signup/login with NextAuth.js & Prisma  
-- 📸 Profile creation + Cloudinary image uploads  
-- ❤️ Swipe to like/dislike & matching logic  
-- 💬 Real-time chat powered by Pusher  
-- 📬 Inbox & outbox message containers with soft delete  
-- 🔄 Cursor-based pagination for messages  
-- 🌙 Dark mode toggle  
-- ⚡️ Responsive UI with Tailwind CSS & Shadcn UI  
-
+- ✅ User signup/login with NextAuth.js & Prisma
+- 📸 Profile creation + Cloudinary image uploads
+- ❤️ Swipe to like/dislike & matching logic
+- 💬 Real-time chat powered by Pusher
+- 📬 Inbox & outbox message containers with soft delete
+- 🔄 Cursor-based pagination for messages
+- 🌙 Dark mode toggle
+- ⚡️ Responsive UI with Tailwind CSS & Shadcn UI
 
 ## 🛠️ Tech Stack
 
-
-- ⚛️ **Framework:** Next.js 14 (App Router), TypeScript  
-- 🎨 **UI:** Tailwind CSS, Shadcn UI, Lucide icons  
-- 🔄 **State Management:** Zustand  
-- 📋 **Forms & Validation:** React Hook Form & Zod  
-- 🔒 **Authentication:** NextAuth.js (Credentials Provider & Prisma Adapter)  
-- 💾 **Database & ORM:** Prisma (PostgreSQL)  
-- ☁️ **Storage:** Cloudinary for image uploads  
-- 🔴 **Real-time:** Pusher  
-- 🔔 **Notifications:** Browser / in-app alerts  
-
+- ⚛️ **Framework:** Next.js 14 (App Router), TypeScript
+- 🎨 **UI:** Tailwind CSS, Shadcn UI, Lucide icons
+- 🔄 **State Management:** Zustand
+- 📋 **Forms & Validation:** React Hook Form & Zod
+- 🔒 **Authentication:** NextAuth.js (Credentials Provider & Prisma Adapter)
+- 💾 **Database & ORM:** Prisma (PostgreSQL)
+- ☁️ **Storage:** Cloudinary for image uploads
+- 🔴 **Real-time:** Pusher
+- 🔔 **Notifications:** Browser / in-app alerts

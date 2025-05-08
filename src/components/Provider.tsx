@@ -37,7 +37,7 @@ const Provider = ({
     }
   }, [setUnreadCount, userId]);
 
-  usePresenceChannel();
+  usePresenceChannel(userId);
   useNotificationChannel(userId);
   useEffect(() => {
     setMounted(true);
