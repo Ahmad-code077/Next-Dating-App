@@ -8,7 +8,8 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { FaLock } from 'react-icons/fa';
 import { toast } from 'react-toastify';
-
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { useState } from 'react';
 const LoginForm = () => {
   const {
     register,
@@ -29,6 +30,7 @@ const LoginForm = () => {
       toast.error(result.error as string);
     }
   };
+  const [showPassword, setShowPassword] = useState(false);
 
   return (
     <Card className='py-4 md:w-2/5 mx-auto my-12 bg-card'>
@@ -54,19 +56,38 @@ const LoginForm = () => {
           )}
           <Input
             label='Password'
-            type='password'
+            type={showPassword ? 'text' : 'password'}
             variant='bordered'
             {...register('password')}
+            endContent={
+              <button
+                type='button'
+                className='focus:outline-none'
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? (
+                  <FaEyeSlash className='text-default-400 hover:text-default-600' />
+                ) : (
+                  <FaEye className='text-default-400 hover:text-default-600' />
+                )}
+              </button>
+            }
           />
           {errors.password && (
             <p className='px-2 text-red-600 '>{errors.password.message}</p>
           )}
-          <p className='text-center'>
-            Don&apos;t have an account?{' '}
-            <Link href={'/register'} className='text-primary'>
-              Sign up here
+
+          <div className='flex flex-col gap-2 text-center text-sm'>
+            <p>
+              Don&apos;t have an account?{' '}
+              <Link href='/register' className='text-primary'>
+                Sign up here
+              </Link>
+            </p>
+            <Link href='/forgot-password' className='text-primary'>
+              Forgot your password?
             </Link>
-          </p>
+          </div>
           <Button
             type='submit'
             className={`py-6  ${!isValid && 'cursor-not-allowed'} text-lg `}

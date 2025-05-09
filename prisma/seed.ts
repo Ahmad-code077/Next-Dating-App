@@ -11,8 +11,9 @@ async function seedMembers() {
           email: singlemember.email,
           emailVerified: new Date(),
           name: singlemember.name,
-          passwordHash: await hash('password', 10),
+          passwordHash: await hash(singlemember.email, 10),
           image: singlemember.image,
+          profileComplete: true,
           member: {
             create: {
               dateOfBirth: new Date(singlemember.dateOfBirth),
