@@ -1,107 +1,113 @@
 'use client';
 import { registerUser } from '@/app/actions/authActions';
-import { registerFromType, registerSchema } from '@/lib/schema/RegisterSchema';
+import {
+  profileSchema,
+  registerFromType,
+  registerSchema,
+} from '@/lib/schema/RegisterSchema';
 import { handleFormServerErrors } from '@/lib/utils';
-import { Button, Card, CardBody, CardHeader, Input } from '@heroui/react';
+import { Button, Card, CardBody, CardHeader } from '@heroui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useForm } from 'react-hook-form';
+import { useForm, FormProvider } from 'react-hook-form';
 import { FaHeart } from 'react-icons/fa';
-import { toast } from 'react-toastify';
+import UserDetailsForm from './UserDetailsForm';
+import { useState } from 'react';
+import ProfileDetailsForm from './ProfileDetailsForm';
+
 const RegisterForm = () => {
-  const {
-    register,
-    setError,
-    handleSubmit,
-    reset,
-    formState: { isValid, errors, isSubmitting },
-  } = useForm<registerFromType>({
-    resolver: zodResolver(registerSchema),
+  const stepSchemas = [registerSchema, profileSchema];
+  const [activeStep, setActiveStep] = useState(0);
+  const currentValidationSchema = stepSchemas[activeStep];
+
+  const registerFormMethods = useForm<registerFromType>({
+    resolver: zodResolver(currentValidationSchema),
     mode: 'onTouched',
   });
+  const {
+    handleSubmit,
+    getValues,
+    setError,
+    formState: { errors, isValid, isSubmitting },
+  } = registerFormMethods;
+
   const router = useRouter();
-  const RegisterFormSubmit = async (data: registerFromType) => {
-    const result = await registerUser(data);
+  const onSubmit = async () => {
+    console.log('get values', getValues());
+    const result = await registerUser(getValues());
     if (result.status === 'success') {
-      toast.success('User Register successfully Login to Proceed');
-      reset();
-      router.push('/login');
+      router.push('/register/success');
     } else {
       handleFormServerErrors(result, setError);
-      toast.error(
-        typeof result.error === 'string' ? result.error : 'Something went wrong'
-      );
+    }
+  };
+  const getStepContent = (step: number) => {
+    switch (step) {
+      case 0:
+        return <UserDetailsForm />;
+      case 1:
+        return <ProfileDetailsForm />;
+      default:
+        return 'Unknown step';
+    }
+  };
+
+  const onBack = () => {
+    setActiveStep((prev) => prev - 1);
+  };
+
+  const onNext = async () => {
+    if (activeStep === stepSchemas.length - 1) {
+      await onSubmit();
+    } else {
+      setActiveStep((prev) => prev + 1);
     }
   };
 
   return (
     <Card className='py-4 md:w-2/5 mx-auto my-12 bg-card'>
       <CardHeader className='px-4 flex-col items-center gap-3'>
-        <div
-          className='flex 
-        items-center justify-center gap-4 text-2xl sm:text-3xl'
-        >
+        <div className='flex items-center justify-center gap-4 text-2xl sm:text-3xl'>
           <FaHeart className='text-primary' /> Register
         </div>
         <p className='text-center'>
           Discover Your Perfect Match with LoveFinder
         </p>
       </CardHeader>
-      <CardBody className='overflow-visible py-1 '>
-        <form
-          onSubmit={handleSubmit(RegisterFormSubmit)}
-          className='my-2 gap-6 flex  flex-col'
-        >
-          <Input
-            label='Name'
-            type='text'
-            variant='bordered'
-            {...register('name')}
-          />
-          {errors.name && (
-            <p className='px-2 text-red-600 '>{errors.name.message}</p>
-          )}
-          <Input
-            label='Email'
-            type='email'
-            variant='bordered'
-            {...register('email')}
-          />
-          {errors.email && (
-            <p className='px-2 text-red-600 '>{errors.email.message}</p>
-          )}
-
-          <Input
-            label='Password'
-            type='password'
-            variant='bordered'
-            {...register('password')}
-          />
-
-          {errors.password && (
-            <p className='px-2 text-red-600 '>{errors.password.message}</p>
-          )}
-          <p className='text-center'>
-            Already have an account?{' '}
-            <Link className='text-primary' href={'/login'}>
-              Login
-            </Link>
-          </p>
-          <Button
-            type='submit'
-            className={`py-6 text-lg ${
-              !isValid || isSubmitting ? 'cursor-not-allowed' : ''
-            }`}
-            variant='solid'
-            color={!isValid ? 'default' : 'primary'}
-            disabled={!isValid || isSubmitting}
-          >
-            {isSubmitting ? 'Loading...' : 'Sign Up'}
-          </Button>
-        </form>
+      <CardBody className='overflow-visible py-1'>
+        <FormProvider {...registerFormMethods}>
+          <form onSubmit={handleSubmit(onNext)}>
+            <div className='space-y-4'>
+              {getStepContent(activeStep)}
+              {errors.root?.serverError && (
+                <p className='text-danger text-sm'>
+                  {errors.root.serverError.message}
+                </p>
+              )}
+              <div className='flex flex-row items-center gap-6'>
+                {activeStep !== 0 && (
+                  <Button onClick={onBack} fullWidth>
+                    Back
+                  </Button>
+                )}
+                <Button
+                  isLoading={isSubmitting}
+                  isDisabled={!isValid}
+                  fullWidth
+                  color='default'
+                  type='submit'
+                >
+                  {activeStep === stepSchemas.length - 1
+                    ? 'Submit'
+                    : 'Continue'}
+                </Button>
+              </div>
+            </div>
+          </form>
+        </FormProvider>
       </CardBody>
     </Card>
   );
 };
+
 export default RegisterForm;

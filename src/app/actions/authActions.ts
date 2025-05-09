@@ -3,7 +3,10 @@
 import { auth, signIn, signOut } from '@/auth';
 import { prisma } from '@/lib/prisma';
 import { loginFormType } from '@/lib/schema/LoginSchema';
-import { registerFromType, registerSchema } from '@/lib/schema/RegisterSchema';
+import {
+  combinedRegisterSchema,
+  registerFromType,
+} from '@/lib/schema/RegisterSchema';
 import { ActionResult } from '@/types';
 import { User } from '@prisma/client';
 import bcrypt from 'bcryptjs';
@@ -14,11 +17,20 @@ export async function registerUser(
   data: registerFromType
 ): Promise<ActionResult<User>> {
   try {
-    const validated = registerSchema.safeParse(data);
+    const validated = combinedRegisterSchema.safeParse(data);
     if (!validated.success) {
       return { status: 'error', error: validated.error.errors };
     }
-    const { name, email, password } = validated.data;
+    const {
+      name,
+      email,
+      password,
+      city,
+      country,
+      dateOfBirth,
+      description,
+      gender,
+    } = validated.data;
 
     const checkIfExsist = await prisma.user.findUnique({ where: { email } });
 
@@ -31,6 +43,16 @@ export async function registerUser(
         name,
         email,
         passwordHash: hashedPassword,
+        member: {
+          create: {
+            name,
+            city,
+            country,
+            dateOfBirth: new Date(dateOfBirth),
+            description,
+            gender,
+          },
+        },
       },
     });
     return { status: 'success', data: user };
