@@ -28,9 +28,9 @@ export default function CardWrapper({
       <Card className='w-full max-w-md mx-auto p-5 bg-background'>
         <CardHeader className='flex flex-col items-center justify-center'>
           <div className='flex flex-col gap-2 items-center'>
+            <Icon size={30} className={`text-${iconColor}`} />
             <div className='flex flex-row items-center gap-3'>
-              <Icon size={30} className={`text-${iconColor}`} />
-              <h1 className='text-3xl font-semibold text-foreground '>
+              <h1 className='text-3xl font-semibold text-foreground text-center'>
                 {headerText}
               </h1>
             </div>

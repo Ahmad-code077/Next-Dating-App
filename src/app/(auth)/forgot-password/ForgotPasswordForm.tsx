@@ -28,6 +28,7 @@ export default function ForgotPasswordForm() {
       headerIcon={GiPadlock}
       headerText='Forgot password'
       subHeaderText='Enter account email to reset your password'
+      iconColor='primary'
       body={
         <form
           onSubmit={handleSubmit(onSubmit)}

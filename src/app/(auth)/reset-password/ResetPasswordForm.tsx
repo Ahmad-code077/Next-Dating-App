@@ -10,7 +10,7 @@ import {
 import { ActionResult } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Input } from '@heroui/react';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { GiPadlock } from 'react-icons/gi';
@@ -37,11 +37,13 @@ export default function ResetPasswordForm() {
     reset();
   };
 
+  const router = useRouter();
   return (
     <CardWrapper
       headerIcon={GiPadlock}
       headerText='Reset password'
       subHeaderText='Enter your new password below'
+      iconColor='primary'
       body={
         <form
           onSubmit={handleSubmit(onSubmit)}
@@ -101,7 +103,21 @@ export default function ResetPasswordForm() {
           </Button>
         </form>
       }
-      footer={<ResultMessage result={result} />}
+      footer={
+        <div className='flex flex-col items-center gap-4'>
+          <ResultMessage result={result} />
+          {result?.status === 'success' && (
+            <Button
+              color='primary'
+              variant='light'
+              onClick={() => router.push('/login')}
+              className='font-medium'
+            >
+              Go to login
+            </Button>
+          )}
+        </div>
+      }
     />
   );
 }
