@@ -23,29 +23,31 @@ const MemberCard = ({ member, likeIds }: Props) => {
         isFooterBlurred
         as={Link}
         href={`/members/${member?.userId}`}
-        className='border-none bg-card'
+        className='border-none bg-card w-full aspect-[3/4] '
         radius='lg'
         isPressable
       >
-        <CardBody className='overflow-visible p-0 '>
-          <Image
-            alt={member.name}
-            className='w-full object-cover'
-            width={300}
-            height={200}
-            src={(member.image as string) || '/images/user.png'}
-            unoptimized
-          />
-          <div onClick={preventLinkAction}>
-            <div className='absolute top-3 right-3 z-10'>
-              <LikeButton targetId={member.userId} hasLiked={hasLiked} />
-            </div>
-            <div className='absolute top-2 left-2 z-20'>
-              <PresenceDot member={member} />
+        <CardBody className='overflow-visible p-0 relative h-full '>
+          <div className='relative w-full h-full'>
+            <Image
+              alt={member.name}
+              className='object-cover'
+              fill
+              sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
+              src={(member.image as string) || '/images/user.png'}
+              priority
+            />
+            <div onClick={preventLinkAction}>
+              <div className='absolute top-3 right-3 z-10'>
+                <LikeButton targetId={member.userId} hasLiked={hasLiked} />
+              </div>
+              <div className='absolute top-2 left-2 z-20'>
+                <PresenceDot member={member} />
+              </div>
             </div>
           </div>
         </CardBody>
-        <CardFooter className='text-small justify-between py-6 bg-card'>
+        <CardFooter className='text-small justify-between py-6 bg-card/60 backdrop-blur-md'>
           <b>
             {member.name} , {calculateYear(member?.dateOfBirth)}
           </b>

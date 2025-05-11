@@ -21,7 +21,8 @@ export default function RegisterSuccessPage() {
             your account.
           </p>
           <p className='text-sm text-default-400 mt-4'>
-            Note: The verification email might be in your spam folder.
+            Note: The verification email might be in your{' '}
+            <span className='text-primary'>spam</span> folder.
           </p>
         </div>
       }

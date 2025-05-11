@@ -12,9 +12,11 @@ import { Bounce, ToastContainer } from 'react-toastify';
 const Provider = ({
   children,
   userId,
+  profileComplete,
 }: {
   children: ReactNode;
   userId: string;
+  profileComplete: boolean;
 }) => {
   const [mounted, setMounted] = useState(false);
 
@@ -37,8 +39,8 @@ const Provider = ({
     }
   }, [setUnreadCount, userId]);
 
-  usePresenceChannel(userId);
-  useNotificationChannel(userId);
+  usePresenceChannel(userId, profileComplete);
+  useNotificationChannel(userId, profileComplete);
   useEffect(() => {
     setMounted(true);
   }, []);

@@ -36,3 +36,5 @@ export const combinedRegisterSchema = registerSchema.and(profileSchema);
 export type registerFromType = z.infer<
   typeof registerSchema & typeof profileSchema
 >;
+
+export type ProfileSchema = z.infer<typeof profileSchema>;

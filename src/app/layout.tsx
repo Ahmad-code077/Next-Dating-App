@@ -27,12 +27,13 @@ export default async function RootLayout({
 }>) {
   const session = await auth();
   const userId = session?.user?.id || null;
+  const profileComplete = session?.user.profileComplete as boolean;
   return (
     <html lang='en'>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Provider userId={userId as string}>
+        <Provider userId={userId as string} profileComplete={profileComplete}>
           <TopNav />
           <div className='max-w-5xl mx-auto px-3 sm:px-6'>{children}</div>
         </Provider>

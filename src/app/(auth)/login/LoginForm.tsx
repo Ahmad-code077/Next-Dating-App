@@ -10,6 +10,7 @@ import { FaLock } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useState } from 'react';
+import SocialLogin from './SocialLogin';
 const LoginForm = () => {
   const {
     register,
@@ -76,6 +77,8 @@ const LoginForm = () => {
           {errors.password && (
             <p className='px-2 text-red-600 '>{errors.password.message}</p>
           )}
+
+          <SocialLogin />
 
           <div className='flex flex-col gap-2 text-center text-sm'>
             <p>

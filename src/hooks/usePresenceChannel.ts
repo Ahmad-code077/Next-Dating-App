@@ -5,7 +5,10 @@ import { pusherClient } from '@/lib/pusher';
 import { updateLastActive } from '@/app/actions/memberActions';
 type PresenceMember = { id: string };
 
-export const usePresenceChannel = (userId: string | null) => {
+export const usePresenceChannel = (
+  userId: string | null,
+  profileComplete: boolean
+) => {
   const set = usePresenceStore((state) => state.set);
   const add = usePresenceStore((state) => state.add);
   const remove = usePresenceStore((state) => state.remove);
@@ -34,7 +37,7 @@ export const usePresenceChannel = (userId: string | null) => {
   );
 
   useEffect(() => {
-    if (!userId) return;
+    if (!userId || !profileComplete) return;
     if (!channelRef.current) {
       channelRef.current = pusherClient.subscribe('presence-love-finder');
 
