@@ -17,3 +17,9 @@ declare module 'next-auth/jwt' {
     profileComplete: boolean;
   }
 }
+
+declare module '@auth/core/adapters' {
+  interface AdapterUser {
+    profileComplete?: boolean;
+  }
+}
