@@ -1,6 +1,5 @@
 'use client';
 
-// import { deleteImage, setMainImage } from '@/app/actions/userActions';
 import { Photo } from '@prisma/client';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
@@ -32,13 +31,23 @@ export default function MemberPhotos({ photos, editing, mainImageUrl }: Props) {
       id: photo.id,
       type: 'main',
     });
-    await setMainImage(photo);
-    router.refresh();
-    setLoading({
-      isLoading: false,
-      id: '',
-      type: '',
-    });
+    try {
+      await setMainImage(photo);
+      router.refresh();
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        console.log('Unexpected error', error);
+        throw new Error('Something went wrong');
+      }
+    } finally {
+      setLoading({
+        isLoading: false,
+        id: '',
+        type: '',
+      });
+    }
   };
 
   const onDelete = async (photo: Photo) => {

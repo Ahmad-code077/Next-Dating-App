@@ -8,6 +8,7 @@ import { HeroUIProvider } from '@heroui/react';
 import { ThemeProvider as NextThemesProvider } from 'next-themes';
 import { useEffect, useState, ReactNode, useRef, useCallback } from 'react';
 import { Bounce, ToastContainer } from 'react-toastify';
+import { SessionProvider } from 'next-auth/react';
 
 const Provider = ({
   children,
@@ -47,24 +48,26 @@ const Provider = ({
 
   if (!mounted) return <>{children}</>;
   return (
-    <HeroUIProvider>
-      <NextThemesProvider attribute='class' defaultTheme='dark'>
-        <ToastContainer
-          position='bottom-right'
-          autoClose={5000}
-          hideProgressBar
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme='dark'
-          transition={Bounce}
-        />
-        {children}
-      </NextThemesProvider>
-    </HeroUIProvider>
+    <SessionProvider>
+      <HeroUIProvider>
+        <NextThemesProvider attribute='class' defaultTheme='dark'>
+          <ToastContainer
+            position='bottom-right'
+            autoClose={5000}
+            hideProgressBar
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme='dark'
+            transition={Bounce}
+          />
+          {children}
+        </NextThemesProvider>
+      </HeroUIProvider>
+    </SessionProvider>
   );
 };
 

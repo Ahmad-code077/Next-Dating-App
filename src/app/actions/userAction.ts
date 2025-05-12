@@ -65,8 +65,10 @@ export async function AddPhoto(url: string, publicId: string) {
 }
 
 export async function setMainImage(photo: Photo) {
-  console.log('phto recieved  📷📷📷📷📷', photo);
   const userId = await getAuthUserId();
+  if (!photo.isApproved) {
+    throw new Error('Only Approved Photo by admin can be the main image');
+  }
   try {
     await prisma.user.update({
       where: { id: userId },
