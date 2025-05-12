@@ -15,12 +15,14 @@ import Link from 'next/link';
 import { ThemeSwitcher } from '../themeSwitch/ThemeSwitcher';
 import NavLinks from './NavLinks';
 import UserMenu from './UserMenu';
+import { Role } from '@prisma/client';
 
 type Props = {
-  userInfo: { image: string; name: string };
+  userInfo: { image: string; name: string } | null;
+  role: Role | null;
 };
 
-export default function TopNavClient({ userInfo }: Props) {
+export default function TopNavClient({ userInfo, role }: Props) {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
   const navItems = [
@@ -33,7 +35,18 @@ export default function TopNavClient({ userInfo }: Props) {
     { label: 'Login', href: '/login', variant: 'light' },
     { label: 'Sign Up', href: '/register', variant: 'primary' },
   ];
-  const menuItems = !!userInfo ? navItems : [...navItems, ...authItems];
+
+  const adminLinks = [{ label: 'Photo Moderation', href: '/admin/moderation' }];
+
+  // Final Links Logic
+  const isAdmin = role === 'ADMIN';
+  const isLoggedIn = !!userInfo;
+
+  const links = isAdmin
+    ? adminLinks
+    : isLoggedIn
+      ? navItems
+      : [...navItems, ...authItems];
 
   return (
     <Navbar
@@ -48,26 +61,28 @@ export default function TopNavClient({ userInfo }: Props) {
       </NavbarContent>
 
       {/* Brand Logo */}
-      <NavbarBrand className='text-center flex  justify-center md:justify-start'>
-        <Link href='/' className='font-bold text-xl text-primary '>
+      <NavbarBrand className='text-center flex justify-center md:justify-start'>
+        <Link href='/' className='font-bold text-xl text-primary'>
           LoveFinder
         </Link>
       </NavbarBrand>
 
       {/* Desktop Navigation */}
       <NavbarContent
-        style={{ justifyContent: 'space-between' }}
-        className='hidden md:flex  md:items-center  '
+        className='hidden md:flex md:items-center md:justify-center'
+        justify='center'
       >
-        {navItems.map((item) => (
-          <NavLinks key={item.href} href={item.href} label={item.label} />
-        ))}
+        {links
+          .filter((item) => !authItems.some((auth) => auth.href === item.href)) // don't show login/signup in desktop nav
+          .map((item) => (
+            <NavLinks key={item.href} href={item.href} label={item.label} />
+          ))}
       </NavbarContent>
 
-      {/* User Authentication */}
+      {/* Auth Buttons or User Menu */}
       <NavbarContent justify='end'>
-        {!!userInfo ? (
-          <UserMenu user={userInfo as { image: string; name: string }} />
+        {isLoggedIn ? (
+          <UserMenu user={userInfo!} />
         ) : (
           authItems.map((item) => (
             <NavbarItem key={item.href} className='hidden md:flex'>
@@ -93,7 +108,7 @@ export default function TopNavClient({ userInfo }: Props) {
 
       {/* Mobile Menu */}
       <NavbarMenu className='bg-card'>
-        {menuItems.map((item) => (
+        {links.map((item) => (
           <NavbarMenuItem key={item.href} className='my-2'>
             <Link
               className='w-full text-foreground'

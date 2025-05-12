@@ -13,7 +13,12 @@ const NavLinks = ({ href, label }: Props) => {
   const unreadCount = useMessageStore((state) => state.unreadCount);
 
   return (
-    <NavbarItem isActive={pathName === href} as={Link} href={href}>
+    <NavbarItem
+      isActive={pathName === href}
+      as={Link}
+      href={href}
+      className='text-center'
+    >
       {label}
       {href === '/messages' && unreadCount > 0 && (
         <span className='ml-1'>({unreadCount})</span>
