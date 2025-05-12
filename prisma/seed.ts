@@ -28,6 +28,7 @@ async function seedMembers() {
               photos: {
                 create: {
                   url: singlemember.image,
+                  isApproved: true,
                 },
               },
             },
@@ -38,9 +39,22 @@ async function seedMembers() {
   );
 }
 
+async function seedAdmin() {
+  return prisma.user.create({
+    data: {
+      email: 'admin123@gmail.com',
+      emailVerified: new Date(),
+      name: 'Ahmad Admin',
+      passwordHash: await hash('admin123@gmail.com', 10),
+      role: 'ADMIN',
+    },
+  });
+}
+
 async function main() {
   console.log('🌱 Starting seed...');
   await seedMembers();
+  await seedAdmin();
   console.log('✅ Seeding complete!');
 }
 

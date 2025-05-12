@@ -35,8 +35,7 @@ model User {
   profileComplete Boolean   @default(false)
   accounts      Account[]
   member        Member?
-
-
+  role            Role      @default(MEMBER)
 
   @@map("user") 
 }
@@ -66,6 +65,7 @@ model Photo {
   url      String
   publicId String?
   memberId String
+  isApproved Boolean @default(false)
   member   Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
 }
 
@@ -105,4 +105,11 @@ model Token {
 enum TokenType {
   VERIFICATION
   PASSWORD_RESET
+}
+
+
+
+enum Role {
+  ADMIN
+  MEMBER
 }
