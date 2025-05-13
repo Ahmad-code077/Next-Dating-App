@@ -36,13 +36,13 @@ export async function generateToken(email: string, type: TokenType) {
   const token = generateSecureToken(); // replace randomBytes
   const expires = new Date(Date.now() + 1000 * 60 * 60 * 24); //  Expires in 24 hours
 
-  const existingToken = await getTokenByEmail(email);
+  // const existingToken = await getTokenByEmail(email);
 
-  if (existingToken) {
-    await prisma.token.delete({
-      where: { id: existingToken.id },
-    });
-  }
+  // if (existingToken) {
+  //   await prisma.token.delete({
+  //     where: { id: existingToken.id },
+  //   });
+  // }
 
   return prisma.token.create({
     data: {

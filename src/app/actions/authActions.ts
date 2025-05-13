@@ -13,6 +13,7 @@ import { generateToken, getTokenByToken } from '@/lib/tokens';
 import { ActionResult } from '@/types';
 import { TokenType, User } from '@prisma/client';
 import bcrypt from 'bcryptjs';
+import { subDays } from 'date-fns';
 import { AuthError } from 'next-auth';
 
 // SignUp function function
@@ -98,8 +99,30 @@ export async function signInUser(
         error: 'Your Account is Associated with other login method ',
       };
     }
+    const isPasswordValid = await bcrypt.compare(
+      data.password,
+      user.passwordHash
+    );
+    if (!isPasswordValid) {
+      return { status: 'error', error: 'Invalid credentials' };
+    }
 
     if (!user.emailVerified) {
+      const twentyFourHoursAgo = subDays(new Date(), 1);
+      const emailCount = await prisma.token.count({
+        where: {
+          email: data.email,
+          type: TokenType.VERIFICATION,
+          createdAt: { gte: twentyFourHoursAgo },
+        },
+      });
+      if (emailCount >= 3) {
+        return {
+          status: 'error',
+          error:
+            'You have requested verification too many times. Please try again later.',
+        };
+      }
       const { email, token } = await generateToken(
         data.email,
         TokenType.VERIFICATION
@@ -180,8 +203,12 @@ export async function verifyEmail(
       data: { emailVerified: new Date(), profileComplete: true },
     });
 
-    await prisma.token.delete({ where: { id: existingToken.id } });
-
+    await prisma.token.deleteMany({
+      where: {
+        email: existingToken.email,
+        type: TokenType.VERIFICATION,
+      },
+    });
     return { status: 'success', data: 'Success' };
   } catch (error) {
     console.log(error);
