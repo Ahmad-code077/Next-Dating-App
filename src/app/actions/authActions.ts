@@ -280,6 +280,12 @@ export async function completeSocialLoginProfile(
             description: data.description,
             city: data.city,
             country: data.country,
+            photos: {
+              create: {
+                url: session.user.image || '',
+                isApproved: true,
+              },
+            },
           },
         },
       },
