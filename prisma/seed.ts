@@ -2,6 +2,16 @@ import { PrismaClient } from '@prisma/client';
 import { membersData } from './membersData';
 import { hash } from 'bcryptjs';
 const prisma = new PrismaClient();
+async function clearDatabase() {
+  console.log('🧹 Clearing the database...');
+
+  // Delete all data from the user and related models (you may need to add more models here)
+  await prisma.photo.deleteMany({});
+  await prisma.member.deleteMany({});
+  await prisma.user.deleteMany({});
+
+  console.log('✅ Database cleared!');
+}
 
 async function seedMembers() {
   await Promise.all(
@@ -52,6 +62,8 @@ async function seedAdmin() {
 }
 
 async function main() {
+  await clearDatabase(); // Clear all data first
+
   console.log('🌱 Starting seed...');
   await seedMembers();
   await seedAdmin();
