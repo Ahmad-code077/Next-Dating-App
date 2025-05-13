@@ -20,8 +20,8 @@ export default function MemberImage({ photo }: Props) {
   const isAdmin = role === 'ADMIN';
   const router = useRouter();
 
+  if (role === undefined) return null;
   if (!photo) return null;
-
   const approve = async (photoId: string) => {
     try {
       await approvePhoto(photoId);
