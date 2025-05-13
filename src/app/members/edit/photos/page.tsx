@@ -7,6 +7,7 @@ import MemberPhotos from '@/components/membersComp/MemberPhoto';
 import React from 'react';
 import MemberPhotoUpload from './MemberPhotoUpload';
 import CardInnerWrapper from '@/components/CardInnerWrapper';
+import RoleProvider from '@/components/RoleProvider';
 
 export default async function PhotosPage() {
   const userId = await getAuthUserId();
@@ -20,11 +21,16 @@ export default async function PhotosPage() {
         body={
           <>
             <MemberPhotoUpload />
-            <MemberPhotos
-              photos={photos}
-              editing={true}
-              mainImageUrl={member?.image}
-            />
+            <RoleProvider>
+              {(role) => (
+                <MemberPhotos
+                  photos={photos}
+                  editing={true}
+                  mainImageUrl={member?.image}
+                  role={role}
+                />
+              )}
+            </RoleProvider>
           </>
         }
       />

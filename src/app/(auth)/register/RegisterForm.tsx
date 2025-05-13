@@ -33,7 +33,7 @@ const RegisterForm = () => {
 
   const router = useRouter();
   const onSubmit = async () => {
-    console.log('get values', getValues());
+    // console.log('get values', getValues());
     const result = await registerUser(getValues());
     if (result.status === 'success') {
       router.push('/register/success');

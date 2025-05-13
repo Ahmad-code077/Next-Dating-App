@@ -1,5 +1,6 @@
 import { getUnapprovedPhotos } from '@/app/actions/adminActions';
 import MemberPhotos from '@/components/membersComp/MemberPhoto';
+import RoleProvider from '@/components/RoleProvider';
 import { Card, Divider } from '@heroui/react';
 import { FaCheckCircle } from 'react-icons/fa';
 
@@ -13,7 +14,9 @@ export default async function PhotoModerationPage() {
       <Divider />
 
       {photos.length > 0 ? (
-        <MemberPhotos photos={photos} />
+        <RoleProvider>
+          {(role) => <MemberPhotos photos={photos} role={role} />}
+        </RoleProvider>
       ) : (
         <Card className='p-8 flex flex-col items-center justify-center gap-4 bg-default-50'>
           <div className='rounded-full bg-success-100 p-6'>

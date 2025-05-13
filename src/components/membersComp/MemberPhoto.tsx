@@ -1,6 +1,6 @@
 'use client';
 
-import { Photo } from '@prisma/client';
+import { Photo, Role } from '@prisma/client';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import MemberImage from './MemberImage';
@@ -13,10 +13,17 @@ type Props = {
   photos: Photo[] | null;
   editing?: boolean;
   mainImageUrl?: string | null;
+  role: Role | undefined | null; // Add this
 };
 
-export default function MemberPhotos({ photos, editing, mainImageUrl }: Props) {
+export default function MemberPhotos({
+  photos,
+  editing,
+  mainImageUrl,
+  role,
+}: Props) {
   const router = useRouter();
+
   const [loading, setLoading] = useState({
     type: '',
     isLoading: false,
@@ -77,7 +84,7 @@ export default function MemberPhotos({ photos, editing, mainImageUrl }: Props) {
       {photos &&
         photos.map((photo) => (
           <div key={photo.id} className='relative'>
-            <MemberImage photo={photo} />
+            <MemberImage photo={photo} role={role} />
             {editing && (
               <>
                 <div

@@ -10,6 +10,29 @@ export default async function VerifyEmailPage({
   searchParams: Promise<{ token: string }>;
 }) {
   const { token } = await searchParams;
+
+  if (!token) {
+    return (
+      <div>
+        <CardWrapper
+          headerText='Verify your email address'
+          headerIcon={MdOutlineMailOutline}
+          subHeaderText='Verification link is missing or invalid.'
+          footer={
+            <div className='flex flex-col items-center gap-4'>
+              <div className='text-center'>
+                <p className='text-default-600 mb-2'>
+                  Please check your email for the correct verification link or
+                  request a new one.
+                </p>
+              </div>
+            </div>
+          }
+        />
+      </div>
+    );
+  }
+
   const result = await verifyEmail(token);
 
   return (

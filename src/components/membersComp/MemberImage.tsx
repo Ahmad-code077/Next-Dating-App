@@ -1,7 +1,7 @@
 'use client';
 
 import { Button, Image } from '@heroui/react';
-import { Photo } from '@prisma/client';
+import { Photo, Role } from '@prisma/client';
 import { CldImage } from 'next-cloudinary';
 import React from 'react';
 import clsx from 'clsx';
@@ -9,14 +9,13 @@ import { ImCheckmark, ImCross } from 'react-icons/im';
 
 type Props = {
   photo: Photo | null;
+  role: Role | undefined | null; // Add this prop
 };
-import { useRole } from '@/hooks/useRole';
 import { approvePhoto, rejectPhoto } from '@/app/actions/adminActions';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 
-export default function MemberImage({ photo }: Props) {
-  const role = useRole();
+export default function MemberImage({ photo, role }: Props) {
   const isAdmin = role === 'ADMIN';
   const router = useRouter();
 

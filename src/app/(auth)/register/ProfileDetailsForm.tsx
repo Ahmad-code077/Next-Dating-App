@@ -20,7 +20,9 @@ export default function ProfileDetailsForm() {
   return (
     <div className='space-y-4'>
       <Select
-        defaultSelectedKeys={getValues('gender')}
+        defaultSelectedKeys={
+          getValues('gender') ? new Set([getValues('gender')]) : undefined
+        }
         label='Gender'
         aria-label='Select gender'
         variant='bordered'
@@ -30,9 +32,7 @@ export default function ProfileDetailsForm() {
         onChange={(e) => setValue('gender', e.target.value)}
       >
         {genderList.map((item) => (
-          <SelectItem key={item.value} value={item.value}>
-            {item.label}
-          </SelectItem>
+          <SelectItem key={item.value}>{item.label}</SelectItem>
         ))}
       </Select>
       <Input
