@@ -3,6 +3,8 @@ import MemberPhotos from '@/components/membersComp/MemberPhoto';
 import { Card, Divider } from '@heroui/react';
 import { FaCheckCircle } from 'react-icons/fa';
 
+export const dynamic = 'force-dynamic';
+
 export default async function PhotoModerationPage() {
   const photos = await getUnapprovedPhotos();
   return (
