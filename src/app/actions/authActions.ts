@@ -191,6 +191,22 @@ export async function verifyEmail(
     if (hasExpired) {
       return { status: 'error', error: 'Token has expired' };
     }
+    const latestToken = await prisma.token.findFirst({
+      where: {
+        email: existingToken.email,
+        type: TokenType.VERIFICATION,
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    // Only allow if the provided token is the latest
+    if (!latestToken || latestToken.token !== token) {
+      return {
+        status: 'error',
+        error:
+          'This verification link is no longer valid. Please use the most recent email.',
+      };
+    }
 
     const existingUser = await getUserByEmail(existingToken.email);
 

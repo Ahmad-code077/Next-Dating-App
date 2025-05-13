@@ -1,11 +1,13 @@
 export async function sendVerificationEmail(email: string, token: string) {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+  const timestamp = Date.now();
+
   const response = await fetch(`${baseUrl}/api/mail`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ email, token, type: 'verification' }),
+    body: JSON.stringify({ email, token, type: 'verification', timestamp }),
   });
 
   if (!response.ok) {
