@@ -26,7 +26,7 @@ export default function PaginationComponent({
 
   return (
     <div className='border-t-2 w-full mt-5'>
-      <div className='flex flex-row justify-between items-center py-5'>
+      <div className='flex  flex-col gap-4 sm:gap-0  sm:flex-row justify-between items-center py-5'>
         <div>{resultText}</div>
         <Pagination
           total={totalPages}

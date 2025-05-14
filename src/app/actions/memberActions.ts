@@ -40,6 +40,7 @@ export async function getMembers({
           { dateOfBirth: { lte: maxDob } },
           { gender: { in: selectedGender } },
           ...(withPhoto === 'true' ? [{ image: { not: null } }] : []),
+          { user: { profileComplete: true } },
         ],
         NOT: {
           userId,
