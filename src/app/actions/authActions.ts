@@ -241,6 +241,21 @@ export async function generateResetPasswordEmail(
     if (!existingUser) {
       return { status: 'error', error: 'Email not found' };
     }
+    const twentyFourHoursAgo = subDays(new Date(), 1);
+    const resetCount = await prisma.token.count({
+      where: {
+        email,
+        type: TokenType.PASSWORD_RESET,
+        createdAt: { gte: twentyFourHoursAgo },
+      },
+    });
+    if (resetCount >= 2) {
+      return {
+        status: 'error',
+        error:
+          'You have requested password reset too many times. Please try again later.Or Reset by the old one ',
+      };
+    }
 
     const token = await generateToken(email, TokenType.PASSWORD_RESET);
 
@@ -266,13 +281,34 @@ export async function resetPassword(
     const existingToken = await getTokenByToken(token);
 
     if (!existingToken) {
-      return { status: 'error', error: 'Invalid token' };
+      return {
+        status: 'error',
+        error:
+          'This reset link has already been used or expired. Please request a new one.',
+      };
     }
 
     const hasExpired = new Date() > existingToken.expires;
 
     if (hasExpired) {
       return { status: 'error', error: 'Token has expired' };
+    }
+
+    const latestToken = await prisma.token.findFirst({
+      where: {
+        email: existingToken.email,
+        type: TokenType.PASSWORD_RESET,
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    // Only allow if the provided token is the latest
+    if (!latestToken || latestToken.token !== token) {
+      return {
+        status: 'error',
+        error:
+          'This verification link is no longer valid. Please use the most recent email.',
+      };
     }
 
     const existingUser = await getUserByEmail(existingToken.email);
@@ -288,8 +324,11 @@ export async function resetPassword(
       data: { passwordHash: hashedPassword },
     });
 
-    await prisma.token.delete({
-      where: { id: existingToken.id },
+    await prisma.token.deleteMany({
+      where: {
+        email: existingToken.email,
+        type: TokenType.PASSWORD_RESET,
+      },
     });
 
     return {
