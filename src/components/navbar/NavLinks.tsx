@@ -17,7 +17,7 @@ const NavLinks = ({ href, label }: Props) => {
       isActive={pathName === href}
       as={Link}
       href={href}
-      className='text-center'
+      className='text-center font-nunito text-xl'
     >
       {label}
       {href === '/messages' && unreadCount > 0 && (

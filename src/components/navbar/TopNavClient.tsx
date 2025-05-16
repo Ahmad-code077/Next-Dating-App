@@ -62,18 +62,21 @@ export default function TopNavClient({ userInfo, role }: Props) {
 
       {/* Brand Logo */}
       <NavbarBrand className='text-center flex justify-center md:justify-start'>
-        <Link href='/' className='font-bold text-xl text-primary'>
+        <Link
+          href='/'
+          className='font-bold text-3xl text-primary font-grotesque '
+        >
           LoveFinder
         </Link>
       </NavbarBrand>
 
       {/* Desktop Navigation */}
       <NavbarContent
-        className='hidden md:flex md:items-center md:justify-center'
+        className='hidden md:flex md:items-center md:justify-center md:gap-12'
         justify='center'
       >
         {links
-          .filter((item) => !authItems.some((auth) => auth.href === item.href)) // don't show login/signup in desktop nav
+          .filter((item) => !authItems.some((auth) => auth.href === item.href))
           .map((item) => (
             <NavLinks key={item.href} href={item.href} label={item.label} />
           ))}

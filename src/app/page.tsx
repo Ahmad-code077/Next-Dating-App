@@ -22,8 +22,11 @@ export default function Home() {
           </div>
         </div>
 
-        <h1 className='text-5xl font-bold mb-4 text-primary'>
-          Find Your Perfect Match
+        <h1 className='text-3xl sm:text-5xl font-semibold mb-4 '>
+          Find Your{' '}
+          <span className='font-grotesque text-[2.24rem] sm:text-[4.15rem] text-primary'>
+            Perfect Match
+          </span>
         </h1>
 
         <p className='text-xl text-foreground/80 mb-8'>
